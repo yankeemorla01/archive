@@ -1,14 +1,14 @@
 'use client'
 
-import { Hero } from "@/components/hero";
-import { Leva } from "leva";
 import { DomainScannerIframe } from "@/components/domain-scanner-iframe";
 
 export default function Home() {
   return (
-    <>
-      <Hero />
-      <section className="container py-16">
+    <div className="min-h-screen bg-background pt-32 md:pt-40">
+      <section className="container">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-sentient text-center mb-8">
+          Scan your website for free
+        </h1>
         <DomainScannerIframe 
           height={800}
           showBorder={true}
@@ -16,7 +16,6 @@ export default function Home() {
           className="w-full"
         />
       </section>
-      <Leva hidden />
-    </>
+    </div>
   );
 }

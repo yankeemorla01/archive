@@ -35,8 +35,8 @@ export default function DomainScannerPage() {
       }
       
       /* Target the widget when it's created */
-      [data-id="pzbec9"],
-      [data-id="pzbec9"] > *,
+      [data-id="tp_WyEfcR"],
+      [data-id="tp_WyEfcR"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       div[data-easydmarc-widget],
@@ -50,7 +50,7 @@ export default function DomainScannerPage() {
       }
       
       /* Ensure iframe within widget is visible */
-      [data-id="pzbec9"] iframe,
+      [data-id="tp_WyEfcR"] iframe,
       .easydmarc-widget iframe {
         width: 100% !important;
         border: none !important;
@@ -79,7 +79,7 @@ export default function DomainScannerPage() {
 
     // Look for widget elements
     const widgetSelectors = [
-      '[data-id="pzbec9"]',
+      '[data-id="tp_WyEfcR"]',
       '.easydmarc-widget',
       '.easydmarc-widget-container',
       'div[data-easydmarc-widget]',
@@ -113,7 +113,7 @@ export default function DomainScannerPage() {
     }
 
     // Check if widget is already in container
-    const widgetInContainer = container.querySelector('[data-id="pzbec9"], .easydmarc-widget')
+    const widgetInContainer = container.querySelector('[data-id="tp_WyEfcR"], .easydmarc-widget')
     if (widgetInContainer) {
       scriptLoadedRef.current = true
     }
@@ -132,10 +132,10 @@ export default function DomainScannerPage() {
             
             // Check if the added element is the widget
             const isWidget = 
-              element.getAttribute('data-id') === 'pzbec9' ||
+              element.getAttribute('data-id') === 'tp_WyEfcR' ||
               element.classList.contains('easydmarc-widget') ||
               element.classList.contains('easydmarc-widget-container') ||
-              element.querySelector('[data-id="pzbec9"], .easydmarc-widget')
+              element.querySelector('[data-id="tp_WyEfcR"], .easydmarc-widget')
             
             if (isWidget && container && !container.contains(element)) {
               // Check if element contains the container (avoid hierarchy error)
@@ -151,7 +151,7 @@ export default function DomainScannerPage() {
             }
             
             // Also check for widget inside the added element
-            const widgetInside = element.querySelector('[data-id="pzbec9"], .easydmarc-widget, .easydmarc-widget-container')
+            const widgetInside = element.querySelector('[data-id="tp_WyEfcR"], .easydmarc-widget, .easydmarc-widget-container')
             if (widgetInside && container && !container.contains(widgetInside)) {
               // Check if widgetInside contains the container (avoid hierarchy error)
               if (widgetInside.contains(container)) {
@@ -183,8 +183,8 @@ export default function DomainScannerPage() {
     <>
       <Script
         id="easydmarc-domain-scanner-iframe"
-        data-id="pzbec9"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InB6YmVjOSIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoidHJ1ZSIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiIiLCJidXR0b25fMSI6IlNjYW4gTm93IiwiYnV0dG9uXzIiOiJJbmNyZWFzZSBTY29yZSIsInJlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZGVhY3RpdmVfd2lkZ2V0X2xpbmsiOiJmYWxzZSJ9LCJlZGl0aW9uIjoibXNwIiwiYmltaV9hY3RpdmF0aW9uIjoidHJ1ZSIsIm9yZ2FuaXphdGlvbiI6eyJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkiLCJkb21haW4iOiJzY2FuLm9uYm9hcmRpZ2l0YWwuY29tIn19LCJlbWJlZF92ZXJzaW9uIjoiMS4wLjAiLCJlbWJlZF9yZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImlhdCI6MTc2MjU0NjcwN30.LxLx2mwlVMLTY-wPisQUcfP51Cp8up4uLE2RBuAHETw"
+        data-id="tp_WyEfcR"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX1d5RWZjUiIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjQURDMkZGIiwic2hhZG93Q2hlY2siOnRydWUsInNoYWRvd0NvbG9yIjoiIzMzNjZGRjIwIiwidGhlbWVfbW9kZSI6ImRhcmsifX0sImNvbnRlbnQiOnsidGl0bGUiOiJEb21haW4gU2Nhbm5lciIsInBhcmFncmFwaCI6IlNjYW4gYSBkb21haW4gdG8gZ2V0IGl0IGFuYWx5emVkIGZvciBwb3NzaWJsZSBpc3N1ZXMgd2l0aCBETUFSQywgU1BGLCBES0lNIGFuZCBCSU1JIHJlY29yZHMuIiwiYnV0dG9uXzEiOiJTY2FuIE5vdyIsImJ1dHRvbl8yIjoiSW5jcmVhc2UgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjpmYWxzZX19LCJpYXQiOjE3NjI1NDgyMDd9.5NVTJe4nHl4iXSbqRuLNJmd-zDHfsu_YWa8fjPm-wB8"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {
@@ -216,7 +216,7 @@ export default function DomainScannerPage() {
       {/* Container with data-id - EasyDMARC widget may look for this */}
       <div 
         id="domain-scanner-widget-container"
-        data-id="pzbec9"
+        data-id="tp_WyEfcR"
         ref={containerRef}
         className="w-full min-h-[600px]"
         style={{ 

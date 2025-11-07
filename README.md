@@ -33,15 +33,39 @@ vercel
 
 Sigue las instrucciones en la terminal.
 
-## 📦 Uso del Iframe
+## 📦 Opciones de Uso
 
-Una vez desplegado en Vercel, obtendrás una URL como: `https://tu-proyecto.vercel.app`
+**Dominio desplegado:** [https://archive-seven-tau.vercel.app](https://archive-seven-tau.vercel.app)
 
-### Incrustar en cualquier página HTML:
+### Opción 1: Script Embebible (Recomendado) ⭐
+
+La forma más fácil de incluir el widget en cualquier página HTML:
+
+```html
+<!-- Uso simple - el script crea el contenedor automáticamente -->
+<script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"></script>
+
+<!-- O con contenedor personalizado -->
+<div id="mi-widget"></div>
+<script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"
+        data-container-id="mi-widget"></script>
+```
+
+**Ventajas:**
+- ✅ Fácil de usar - solo un tag `<script>`
+- ✅ Sin iframe - se integra directamente en la página
+- ✅ Carga rápida y optimizada
+- ✅ Estilos automáticos para fondos oscuros
+
+Ver `SCRIPT_EMBED_README.md` para más detalles.
+
+### Opción 2: Iframe
+
+Incrustar como iframe en cualquier página HTML:
 
 ```html
 <iframe 
-  src="https://tu-proyecto.vercel.app/domain-scanner"
+  src="https://archive-seven-tau.vercel.app/domain-scanner"
   width="100%"
   height="800"
   frameborder="0"
@@ -69,6 +93,8 @@ import { DomainScannerIframe } from '@/components/domain-scanner-iframe'
 - `/app/domain-scanner/page.tsx` - Página que carga el script de EasyDMARC
 - `/app/domain-scanner/layout.tsx` - Layout sin header para iframe
 - `/components/domain-scanner-iframe.tsx` - Componente React para incrustar el iframe
+- `/public/domain-scanner-embed.js` - **Script embebible para usar en cualquier página** ⭐
+- `/public/embed-example.html` - Ejemplo de uso del script embebible
 
 ## 🔧 Configuración
 

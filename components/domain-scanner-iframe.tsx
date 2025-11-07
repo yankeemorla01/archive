@@ -55,6 +55,7 @@ export function DomainScannerIframe({
       borderRadius: `${borderRadius}px`,
       overflow: 'hidden',
       display: 'block',
+      background: 'transparent',
     }
 
     if (height === 'auto') {

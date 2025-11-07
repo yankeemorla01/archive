@@ -10,9 +10,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Skal Ventures",
-  description: "Investment strategies that outperform the market",
-    generator: 'v0.app'
+  title: "Domain Scanner - Scan your website for free",
+  description: "Free domain scanner to analyze your website for DMARC, SPF, DKIM and BIMI records",
+  generator: 'v0.app'
 };
 
 export default function RootLayout({
@@ -26,7 +26,6 @@ export default function RootLayout({
         className={`${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <Header />
         {children}
       </body>
     </html>

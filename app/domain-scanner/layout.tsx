@@ -1,11 +1,4 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
-import "../globals.css";
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Domain Scanner",
@@ -24,14 +17,27 @@ export default function DomainScannerLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
-        {children}
-      </body>
-    </html>
+    <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          html, body {
+            background: transparent !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            overflow-x: hidden !important;
+          }
+          
+          #__next {
+            width: 100% !important;
+            min-height: 100% !important;
+            background: transparent !important;
+          }
+        `
+      }} />
+      {children}
+    </>
   );
 }
 

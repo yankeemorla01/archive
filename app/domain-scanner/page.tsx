@@ -35,8 +35,8 @@ export default function DomainScannerPage() {
       }
       
       /* Target the widget when it's created */
-      [data-id="tp_WyEfcR"],
-      [data-id="tp_WyEfcR"] > *,
+      [data-id="tp_fL71Qv"],
+      [data-id="tp_fL71Qv"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       div[data-easydmarc-widget],
@@ -50,7 +50,7 @@ export default function DomainScannerPage() {
       }
       
       /* Ensure iframe within widget is visible */
-      [data-id="tp_WyEfcR"] iframe,
+      [data-id="tp_fL71Qv"] iframe,
       .easydmarc-widget iframe {
         width: 100% !important;
         border: none !important;
@@ -79,7 +79,7 @@ export default function DomainScannerPage() {
 
     // Look for widget elements
     const widgetSelectors = [
-      '[data-id="tp_WyEfcR"]',
+      '[data-id="tp_fL71Qv"]',
       '.easydmarc-widget',
       '.easydmarc-widget-container',
       'div[data-easydmarc-widget]',
@@ -113,7 +113,7 @@ export default function DomainScannerPage() {
     }
 
     // Check if widget is already in container
-    const widgetInContainer = container.querySelector('[data-id="tp_WyEfcR"], .easydmarc-widget')
+    const widgetInContainer = container.querySelector('[data-id="tp_fL71Qv"], .easydmarc-widget')
     if (widgetInContainer) {
       scriptLoadedRef.current = true
     }
@@ -132,10 +132,10 @@ export default function DomainScannerPage() {
             
             // Check if the added element is the widget
             const isWidget = 
-              element.getAttribute('data-id') === 'tp_WyEfcR' ||
+              element.getAttribute('data-id') === 'tp_fL71Qv' ||
               element.classList.contains('easydmarc-widget') ||
               element.classList.contains('easydmarc-widget-container') ||
-              element.querySelector('[data-id="tp_WyEfcR"], .easydmarc-widget')
+              element.querySelector('[data-id="tp_fL71Qv"], .easydmarc-widget')
             
             if (isWidget && container && !container.contains(element)) {
               // Check if element contains the container (avoid hierarchy error)
@@ -151,7 +151,7 @@ export default function DomainScannerPage() {
             }
             
             // Also check for widget inside the added element
-            const widgetInside = element.querySelector('[data-id="tp_WyEfcR"], .easydmarc-widget, .easydmarc-widget-container')
+            const widgetInside = element.querySelector('[data-id="tp_fL71Qv"], .easydmarc-widget, .easydmarc-widget-container')
             if (widgetInside && container && !container.contains(widgetInside)) {
               // Check if widgetInside contains the container (avoid hierarchy error)
               if (widgetInside.contains(container)) {
@@ -183,8 +183,8 @@ export default function DomainScannerPage() {
     <>
       <Script
         id="easydmarc-domain-scanner-iframe"
-        data-id="tp_WyEfcR"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX1d5RWZjUiIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjQURDMkZGIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBOb3ciLCJidXR0b25fMiI6IkluY3JlYXNlIFNjb3JlIiwicmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJkZWFjdGl2ZV93aWRnZXRfbGluayI6ZmFsc2V9fSwiaWF0IjoxNzYyNTQ5MDAzfQ._pugQBwafW8IGbTKp1RNxFmUXsySZKGzrRjZnGLu39U"
+        data-id="tp_fL71Qv"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX2ZMNzFRdiIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjQURDMkZGIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBOb3ciLCJidXR0b25fMiI6IkluY3JlYXNlIFNjb3JlIiwicmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJkZWFjdGl2ZV93aWRnZXRfbGluayI6ZmFsc2V9fSwiaWF0IjoxNzYyNTQ5MzQ2fQ.jd2Y17Kgd8ckhtoj7qlkuWtLcBSa8t4DNAPo2ij47fo"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {
@@ -216,7 +216,7 @@ export default function DomainScannerPage() {
       {/* Container with data-id - EasyDMARC widget may look for this */}
       <div 
         id="domain-scanner-widget-container"
-        data-id="tp_WyEfcR"
+        data-id="tp_fL71Qv"
         ref={containerRef}
         className="w-full min-h-[600px]"
         style={{ 

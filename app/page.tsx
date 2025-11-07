@@ -12,13 +12,13 @@ export default function Home() {
     style.id = 'domain-scanner-styles'
     style.textContent = `
       /* Target all possible widget containers */
-      [data-id="scxy6w"],
-      [data-id="scxy6w"] > *,
+      [data-id="tp_hHFujm"],
+      [data-id="tp_hHFujm"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       .easydmarc-domain-scanner,
       div[data-easydmarc-widget],
-      iframe[data-id="scxy6w"],
+      iframe[data-id="tp_hHFujm"],
       #easydmarc-widget-container,
       #domain-scanner-container > * {
         background: transparent !important;
@@ -36,12 +36,12 @@ export default function Home() {
       }
       
       /* Make widget text visible on dark background */
-      [data-id="scxy6w"] h1,
-      [data-id="scxy6w"] h2,
-      [data-id="scxy6w"] h3,
-      [data-id="scxy6w"] p,
-      [data-id="scxy6w"] label,
-      [data-id="scxy6w"] span,
+      [data-id="tp_hHFujm"] h1,
+      [data-id="tp_hHFujm"] h2,
+      [data-id="tp_hHFujm"] h3,
+      [data-id="tp_hHFujm"] p,
+      [data-id="tp_hHFujm"] label,
+      [data-id="tp_hHFujm"] span,
       .easydmarc-widget h1,
       .easydmarc-widget h2,
       .easydmarc-widget h3,
@@ -52,8 +52,8 @@ export default function Home() {
       }
       
       /* Style input fields for dark theme */
-      [data-id="scxy6w"] input,
-      [data-id="scxy6w"] textarea,
+      [data-id="tp_hHFujm"] input,
+      [data-id="tp_hHFujm"] textarea,
       .easydmarc-widget input,
       .easydmarc-widget textarea {
         background: rgba(255, 255, 255, 0.1) !important;
@@ -61,20 +61,20 @@ export default function Home() {
         color: #ffffff !important;
       }
       
-      [data-id="scxy6w"] input::placeholder,
+      [data-id="tp_hHFujm"] input::placeholder,
       .easydmarc-widget input::placeholder {
         color: rgba(255, 255, 255, 0.5) !important;
       }
       
       /* Style buttons for dark theme */
-      [data-id="scxy6w"] button,
+      [data-id="tp_hHFujm"] button,
       .easydmarc-widget button {
         background: #FFC700 !important;
         color: #000000 !important;
         border: none !important;
       }
       
-      [data-id="scxy6w"] button:hover,
+      [data-id="tp_hHFujm"] button:hover,
       .easydmarc-widget button:hover {
         background: #ffd633 !important;
       }
@@ -95,7 +95,7 @@ export default function Home() {
 
       // Skip script tags - we want the actual widget element
       const widgetSelectors = [
-        '[data-id="scxy6w"]',
+        '[data-id="tp_hHFujm"]',
         '.easydmarc-widget',
         '.easydmarc-widget-container',
         'div[data-easydmarc-widget]',
@@ -207,15 +207,160 @@ export default function Home() {
       return false
     }
 
+    // Function to capture domain data from widget
+    const captureDomainData = async (domain: string) => {
+      try {
+        const data = {
+          domain,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          referrer: document.referrer,
+          pageUrl: window.location.href
+        }
+
+        // Send to API endpoint
+        const response = await fetch('/api/capture-domain', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          console.log('Domain captured successfully:', result)
+        } else {
+          console.error('Failed to capture domain:', response.statusText)
+        }
+      } catch (error) {
+        console.error('Error capturing domain:', error)
+      }
+    }
+
+    // Function to setup domain capture listeners
+    const setupDomainCapture = () => {
+      const container = document.getElementById('domain-scanner-container')
+      if (!container) return
+
+      // Find input field in widget
+      const findInput = () => {
+        const selectors = [
+          '[data-id="tp_hHFujm"] input[type="text"]',
+          '[data-id="tp_hHFujm"] input[type="email"]',
+          '[data-id="tp_hHFujm"] input[placeholder*="domain"]',
+          '[data-id="tp_hHFujm"] input[placeholder*="Domain"]',
+          '.easydmarc-widget input[type="text"]',
+          '.easydmarc-widget input[type="email"]',
+          '.easydmarc-widget input[placeholder*="domain"]',
+          '.easydmarc-widget input[placeholder*="Domain"]'
+        ]
+
+        for (const selector of selectors) {
+          const input = container.querySelector(selector) as HTMLInputElement
+          if (input) return input
+        }
+        return null
+      }
+
+      // Find scan button
+      const findScanButton = () => {
+        const selectors = [
+          '[data-id="tp_hHFujm"] button',
+          '.easydmarc-widget button',
+          'button:contains("Scan")',
+          'button[type="submit"]'
+        ]
+
+        for (const selector of selectors) {
+          const buttons = container.querySelectorAll(selector)
+          for (const button of buttons) {
+            if (button.textContent?.toLowerCase().includes('scan')) {
+              return button as HTMLButtonElement
+            }
+          }
+        }
+        return null
+      }
+
+      // Setup capture on input change
+      const setupInputCapture = () => {
+        const input = findInput()
+        if (!input) return false
+
+        // Remove existing listeners to avoid duplicates
+        const newInput = input.cloneNode(true) as HTMLInputElement
+        input.parentNode?.replaceChild(newInput, input)
+
+        // Capture on blur (when user leaves the field)
+        newInput.addEventListener('blur', () => {
+          const domain = newInput.value?.trim()
+          if (domain && domain.length > 0) {
+            captureDomainData(domain)
+          }
+        })
+
+        // Capture on Enter key
+        newInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const domain = newInput.value?.trim()
+            if (domain && domain.length > 0) {
+              captureDomainData(domain)
+            }
+          }
+        })
+
+        return true
+      }
+
+      // Setup capture on button click
+      const setupButtonCapture = () => {
+        const button = findScanButton()
+        if (!button) return false
+
+        button.addEventListener('click', () => {
+          const input = findInput()
+          if (input) {
+            const domain = input.value?.trim()
+            if (domain && domain.length > 0) {
+              captureDomainData(domain)
+            }
+          }
+        })
+
+        return true
+      }
+
+      // Try to setup capture
+      const inputFound = setupInputCapture()
+      const buttonFound = setupButtonCapture()
+
+      return inputFound || buttonFound
+    }
+
     // Start checking immediately and more frequently
     let checkInterval: NodeJS.Timeout | null = null
+    let captureSetup = false
     
     // Check immediately
     findAndMoveWidget()
     
+    // Setup capture after widget is found
+    const setupCaptureInterval = setInterval(() => {
+      if (!captureSetup) {
+        captureSetup = setupDomainCapture()
+        if (captureSetup) {
+          clearInterval(setupCaptureInterval)
+        }
+      }
+    }, 500)
+
     // Then check periodically with shorter intervals
     checkInterval = setInterval(() => {
       const found = findAndMoveWidget()
+      if (found && !captureSetup) {
+        captureSetup = setupDomainCapture()
+      }
       if (found) {
         if (checkInterval) {
           clearInterval(checkInterval)
@@ -230,6 +375,7 @@ export default function Home() {
         clearInterval(checkInterval)
         checkInterval = null
       }
+      clearInterval(setupCaptureInterval)
     }, 6000)
 
     return () => {
@@ -248,8 +394,8 @@ export default function Home() {
       <Header />
       <Script
         id="easydmarc-domain-scanner"
-        data-id="scxy6w"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNjeHk2dyIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoiZmFsc2UiLCJ0aGVtZV9tb2RlIjoiZGFyayJ9fSwiY29udGVudCI6eyJ0aXRsZSI6IkRvbWFpbiBTY2FubmVyIiwicGFyYWdyYXBoIjoiIiwiYnV0dG9uXzEiOiJTY2FuIE5vdyIsImJ1dHRvbl8yIjoiSW5jcmVhc2UgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjoiZmFsc2UifSwiZWRpdGlvbiI6Im1zcCIsImJpbWlfYWN0aXZhdGlvbiI6InRydWUiLCJvcmdhbml6YXRpb24iOnsib2JqZWN0SWQiOiJvcmdfNjgwMmQ3YTk0NTU2MDFjOTFjMDYyNjU5IiwiZG9tYWluIjoic2Nhbi5vbmJvYXJkaWdpdGFsLmNvbSJ9fSwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiZW1iZWRfcmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJpYXQiOjE3NjI1NDk5MzB9.GYDR28TSIUFwI8teDhpMRsIRgH_POnWcbh2Cn7PjhAU"
+        data-id="tp_hHFujm"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX2hIRnVqbSIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjQURDMkZGIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBOb3ciLCJidXR0b25fMiI6IkluY3JlYXNlIFNjb3JlIiwicmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJkZWFjdGl2ZV93aWRnZXRfbGluayI6ZmFsc2V9fSwiaWF0IjoxNzYyNTUyNjY3fQ.s7n26w5-9is2aUm0Pbej9-KkMVs0vqq7rznPiVJ31w0"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {

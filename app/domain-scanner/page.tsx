@@ -35,8 +35,8 @@ export default function DomainScannerPage() {
       }
       
       /* Target the widget when it's created */
-      [data-id="k7cnng"],
-      [data-id="k7cnng"] > *,
+      [data-id="641b98"],
+      [data-id="641b98"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       div[data-easydmarc-widget],
@@ -50,7 +50,7 @@ export default function DomainScannerPage() {
       }
       
       /* Ensure iframe within widget is visible */
-      [data-id="k7cnng"] iframe,
+      [data-id="641b98"] iframe,
       .easydmarc-widget iframe {
         width: 100% !important;
         border: none !important;
@@ -79,7 +79,7 @@ export default function DomainScannerPage() {
 
     // Look for widget elements
     const widgetSelectors = [
-      '[data-id="k7cnng"]',
+      '[data-id="641b98"]',
       '.easydmarc-widget',
       '.easydmarc-widget-container',
       'div[data-easydmarc-widget]',
@@ -113,7 +113,7 @@ export default function DomainScannerPage() {
     }
 
     // Check if widget is already in container
-    const widgetInContainer = container.querySelector('[data-id="k7cnng"], .easydmarc-widget')
+    const widgetInContainer = container.querySelector('[data-id="641b98"], .easydmarc-widget')
     if (widgetInContainer) {
       scriptLoadedRef.current = true
     }
@@ -158,10 +158,10 @@ export default function DomainScannerPage() {
     // Find input field in widget
     const findInput = () => {
         const selectors = [
-          '[data-id="k7cnng"] input[type="text"]',
-          '[data-id="k7cnng"] input[type="email"]',
-          '[data-id="k7cnng"] input[placeholder*="domain"]',
-          '[data-id="k7cnng"] input[placeholder*="Domain"]',
+          '[data-id="641b98"] input[type="text"]',
+          '[data-id="641b98"] input[type="email"]',
+          '[data-id="641b98"] input[placeholder*="domain"]',
+          '[data-id="641b98"] input[placeholder*="Domain"]',
         '.easydmarc-widget input[type="text"]',
         '.easydmarc-widget input[type="email"]',
         '.easydmarc-widget input[placeholder*="domain"]',
@@ -178,7 +178,7 @@ export default function DomainScannerPage() {
     // Find scan button
     const findScanButton = () => {
         const selectors = [
-          '[data-id="k7cnng"] button',
+          '[data-id="641b98"] button',
           '.easydmarc-widget button',
         'button[type="submit"]'
       ]
@@ -268,10 +268,10 @@ export default function DomainScannerPage() {
             
             // Check if the added element is the widget
             const isWidget = 
-              element.getAttribute('data-id') === 'k7cnng' ||
+              element.getAttribute('data-id') === '641b98' ||
               element.classList.contains('easydmarc-widget') ||
               element.classList.contains('easydmarc-widget-container') ||
-              element.querySelector('[data-id="k7cnng"], .easydmarc-widget')
+              element.querySelector('[data-id="641b98"], .easydmarc-widget')
             
             if (isWidget && container && !container.contains(element)) {
               // Check if element contains the container (avoid hierarchy error)
@@ -294,7 +294,7 @@ export default function DomainScannerPage() {
             }
             
             // Also check for widget inside the added element
-            const widgetInside = element.querySelector('[data-id="k7cnng"], .easydmarc-widget, .easydmarc-widget-container')
+            const widgetInside = element.querySelector('[data-id="641b98"], .easydmarc-widget, .easydmarc-widget-container')
             if (widgetInside && container && !container.contains(widgetInside)) {
               // Check if widgetInside contains the container (avoid hierarchy error)
               if (widgetInside.contains(container)) {
@@ -344,8 +344,8 @@ export default function DomainScannerPage() {
     <>
       <Script
         id="easydmarc-domain-scanner-iframe"
-        data-id="k7cnng"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ims3Y25uZyIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoiZmFsc2UiLCJ0aGVtZV9tb2RlIjoiZGFyayJ9fSwiY29udGVudCI6eyJ0aXRsZSI6IkRvbWFpbiBTY2FubmVyIiwicGFyYWdyYXBoIjoiIiwiYnV0dG9uXzEiOiJTY2FuIE5vdyIsImJ1dHRvbl8yIjoiSW5jcmVhc2UgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjoiZmFsc2UifSwiZWRpdGlvbiI6Im1zcCIsImJpbWlfYWN0aXZhdGlvbiI6InRydWUiLCJvcmdhbml6YXRpb24iOnsib2JqZWN0SWQiOiJvcmdfNjgwMmQ3YTk0NTU2MDFjOTFjMDYyNjU5IiwiZG9tYWluIjoic2Nhbi5vbmJvYXJkaWdpdGFsLmNvbSJ9fSwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiZW1iZWRfcmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJpYXQiOjE3NjI1NTI5MzV9.9wmwGI9ZMrVOCX2al010e10szCSM3LUQ9sd0aBEhKlM"
+        data-id="641b98"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MWI5OCIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoidHJ1ZSIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiIiLCJidXR0b25fMSI6IlNjYW4gTm93IiwiYnV0dG9uXzIiOiJJbmNyZWFzZSBTY29yZSIsInJlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZGVhY3RpdmVfd2lkZ2V0X2xpbmsiOiJ0cnVlIn0sImVkaXRpb24iOiJtc3AiLCJiaW1pX2FjdGl2YXRpb24iOiJ0cnVlIiwib3JnYW5pemF0aW9uIjp7Im9iamVjdElkIjoib3JnXzY4MDJkN2E5NDU1NjAxYzkxYzA2MjY1OSIsImRvbWFpbiI6InNjYW4ub25ib2FyZGlnaXRhbC5jb20ifX0sImVtYmVkX3ZlcnNpb24iOiIxLjAuMCIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiaWF0IjoxNzYyNTUzMzYyfQ.wZfNt3v8ttrSayOKoODKxkbBAH_maWkwQv_0etm7swA"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {
@@ -377,7 +377,7 @@ export default function DomainScannerPage() {
       {/* Container with data-id - EasyDMARC widget may look for this */}
       <div 
         id="domain-scanner-widget-container"
-        data-id="k7cnng"
+        data-id="641b98"
         ref={containerRef}
         className="w-full min-h-[600px]"
         style={{ 

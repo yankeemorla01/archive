@@ -12,13 +12,13 @@ export default function Home() {
     style.id = 'domain-scanner-styles'
     style.textContent = `
       /* Target all possible widget containers */
-      [data-id="k7cnng"],
-      [data-id="k7cnng"] > *,
+      [data-id="641b98"],
+      [data-id="641b98"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       .easydmarc-domain-scanner,
       div[data-easydmarc-widget],
-      iframe[data-id="k7cnng"],
+      iframe[data-id="641b98"],
       #easydmarc-widget-container,
       #domain-scanner-container > * {
         background: transparent !important;
@@ -36,12 +36,12 @@ export default function Home() {
       }
       
       /* Make widget text visible on dark background */
-      [data-id="k7cnng"] h1,
-      [data-id="k7cnng"] h2,
-      [data-id="k7cnng"] h3,
-      [data-id="k7cnng"] p,
-      [data-id="k7cnng"] label,
-      [data-id="k7cnng"] span,
+      [data-id="641b98"] h1,
+      [data-id="641b98"] h2,
+      [data-id="641b98"] h3,
+      [data-id="641b98"] p,
+      [data-id="641b98"] label,
+      [data-id="641b98"] span,
       .easydmarc-widget h1,
       .easydmarc-widget h2,
       .easydmarc-widget h3,
@@ -52,8 +52,8 @@ export default function Home() {
       }
       
       /* Style input fields for dark theme */
-      [data-id="k7cnng"] input,
-      [data-id="k7cnng"] textarea,
+      [data-id="641b98"] input,
+      [data-id="641b98"] textarea,
       .easydmarc-widget input,
       .easydmarc-widget textarea {
         background: rgba(255, 255, 255, 0.1) !important;
@@ -61,20 +61,20 @@ export default function Home() {
         color: #ffffff !important;
       }
       
-      [data-id="k7cnng"] input::placeholder,
+      [data-id="641b98"] input::placeholder,
       .easydmarc-widget input::placeholder {
         color: rgba(255, 255, 255, 0.5) !important;
       }
       
       /* Style buttons for dark theme */
-      [data-id="k7cnng"] button,
+      [data-id="641b98"] button,
       .easydmarc-widget button {
         background: #FFC700 !important;
         color: #000000 !important;
         border: none !important;
       }
       
-      [data-id="k7cnng"] button:hover,
+      [data-id="641b98"] button:hover,
       .easydmarc-widget button:hover {
         background: #ffd633 !important;
       }
@@ -95,7 +95,7 @@ export default function Home() {
 
       // Skip script tags - we want the actual widget element
       const widgetSelectors = [
-        '[data-id="k7cnng"]',
+        '[data-id="641b98"]',
         '.easydmarc-widget',
         '.easydmarc-widget-container',
         'div[data-easydmarc-widget]',
@@ -246,10 +246,10 @@ export default function Home() {
       // Find input field in widget
       const findInput = () => {
         const selectors = [
-          '[data-id="k7cnng"] input[type="text"]',
-          '[data-id="k7cnng"] input[type="email"]',
-          '[data-id="k7cnng"] input[placeholder*="domain"]',
-          '[data-id="k7cnng"] input[placeholder*="Domain"]',
+          '[data-id="641b98"] input[type="text"]',
+          '[data-id="641b98"] input[type="email"]',
+          '[data-id="641b98"] input[placeholder*="domain"]',
+          '[data-id="641b98"] input[placeholder*="Domain"]',
           '.easydmarc-widget input[type="text"]',
           '.easydmarc-widget input[type="email"]',
           '.easydmarc-widget input[placeholder*="domain"]',
@@ -266,7 +266,7 @@ export default function Home() {
       // Find scan button
       const findScanButton = () => {
         const selectors = [
-          '[data-id="k7cnng"] button',
+          '[data-id="641b98"] button',
           '.easydmarc-widget button',
           'button:contains("Scan")',
           'button[type="submit"]'
@@ -394,8 +394,8 @@ export default function Home() {
       <Header />
       <Script
         id="easydmarc-domain-scanner"
-        data-id="k7cnng"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ims3Y25uZyIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoiZmFsc2UiLCJ0aGVtZV9tb2RlIjoiZGFyayJ9fSwiY29udGVudCI6eyJ0aXRsZSI6IkRvbWFpbiBTY2FubmVyIiwicGFyYWdyYXBoIjoiIiwiYnV0dG9uXzEiOiJTY2FuIE5vdyIsImJ1dHRvbl8yIjoiSW5jcmVhc2UgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjoiZmFsc2UifSwiZWRpdGlvbiI6Im1zcCIsImJpbWlfYWN0aXZhdGlvbiI6InRydWUiLCJvcmdhbml6YXRpb24iOnsib2JqZWN0SWQiOiJvcmdfNjgwMmQ3YTk0NTU2MDFjOTFjMDYyNjU5IiwiZG9tYWluIjoic2Nhbi5vbmJvYXJkaWdpdGFsLmNvbSJ9fSwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiZW1iZWRfcmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJpYXQiOjE3NjI1NTI5MzV9.9wmwGI9ZMrVOCX2al010e10szCSM3LUQ9sd0aBEhKlM"
+        data-id="641b98"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MWI5OCIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoidHJ1ZSIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiIiLCJidXR0b25fMSI6IlNjYW4gTm93IiwiYnV0dG9uXzIiOiJJbmNyZWFzZSBTY29yZSIsInJlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZGVhY3RpdmVfd2lkZ2V0X2xpbmsiOiJ0cnVlIn0sImVkaXRpb24iOiJtc3AiLCJiaW1pX2FjdGl2YXRpb24iOiJ0cnVlIiwib3JnYW5pemF0aW9uIjp7Im9iamVjdElkIjoib3JnXzY4MDJkN2E5NDU1NjAxYzkxYzA2MjY1OSIsImRvbWFpbiI6InNjYW4ub25ib2FyZGlnaXRhbC5jb20ifX0sImVtYmVkX3ZlcnNpb24iOiIxLjAuMCIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiaWF0IjoxNzYyNTUzMzYyfQ.wZfNt3v8ttrSayOKoODKxkbBAH_maWkwQv_0etm7swA"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {

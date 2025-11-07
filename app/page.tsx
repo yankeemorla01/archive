@@ -11,13 +11,13 @@ export default function Home() {
     style.id = 'domain-scanner-styles'
     style.textContent = `
       /* Target all possible widget containers */
-      [data-id="tp_aWPt5A"],
-      [data-id="tp_aWPt5A"] > *,
+      [data-id="pzbec9"],
+      [data-id="pzbec9"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       .easydmarc-domain-scanner,
       div[data-easydmarc-widget],
-      iframe[data-id="tp_aWPt5A"],
+      iframe[data-id="pzbec9"],
       #easydmarc-widget-container,
       #domain-scanner-container > * {
         background: transparent !important;
@@ -35,12 +35,12 @@ export default function Home() {
       }
       
       /* Make widget text visible on dark background */
-      [data-id="tp_aWPt5A"] h1,
-      [data-id="tp_aWPt5A"] h2,
-      [data-id="tp_aWPt5A"] h3,
-      [data-id="tp_aWPt5A"] p,
-      [data-id="tp_aWPt5A"] label,
-      [data-id="tp_aWPt5A"] span,
+      [data-id="pzbec9"] h1,
+      [data-id="pzbec9"] h2,
+      [data-id="pzbec9"] h3,
+      [data-id="pzbec9"] p,
+      [data-id="pzbec9"] label,
+      [data-id="pzbec9"] span,
       .easydmarc-widget h1,
       .easydmarc-widget h2,
       .easydmarc-widget h3,
@@ -51,8 +51,8 @@ export default function Home() {
       }
       
       /* Style input fields for dark theme */
-      [data-id="tp_aWPt5A"] input,
-      [data-id="tp_aWPt5A"] textarea,
+      [data-id="pzbec9"] input,
+      [data-id="pzbec9"] textarea,
       .easydmarc-widget input,
       .easydmarc-widget textarea {
         background: rgba(255, 255, 255, 0.1) !important;
@@ -60,20 +60,20 @@ export default function Home() {
         color: #ffffff !important;
       }
       
-      [data-id="tp_aWPt5A"] input::placeholder,
+      [data-id="pzbec9"] input::placeholder,
       .easydmarc-widget input::placeholder {
         color: rgba(255, 255, 255, 0.5) !important;
       }
       
       /* Style buttons for dark theme */
-      [data-id="tp_aWPt5A"] button,
+      [data-id="pzbec9"] button,
       .easydmarc-widget button {
         background: #FFC700 !important;
         color: #000000 !important;
         border: none !important;
       }
       
-      [data-id="tp_aWPt5A"] button:hover,
+      [data-id="pzbec9"] button:hover,
       .easydmarc-widget button:hover {
         background: #ffd633 !important;
       }
@@ -245,8 +245,8 @@ export default function Home() {
     <>
       <Script
         id="easydmarc-domain-scanner"
-        data-id="tp_aWPt5A"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX2FXUHQ1QSIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2NvbnRhY3QiLCJlbWJlZF92ZXJzaW9uIjoiMS4wLjAiLCJoZWlnaHQiOiJhdXRvIiwid2lkdGgiOiIxMDAlIiwib3B0aW9ucyI6eyJiaW1pX2FjdGl2YXRpb24iOnRydWUsIm9yZ2FuaXphdGlvbiI6eyJkb21haW4iOiJvbmJvYXJkaWdpdGFsLmNvbSIsIm9iamVjdElkIjoib3JnXzY4MDJkN2E5NDU1NjAxYzkxYzA2MjY1OSJ9LCJlZGl0aW9uIjoibXNwIiwic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiNGRkZGRkYiLCJ0aXRsZUNvbG9yIjoiIzFBMzM4MCIsInBhcmFncmFwaENvbG9yIjoiIzVBNUU3MiIsImJ1dHRvbnNDb2xvciI6IiMzMzY2RkYiLCJzaGFkb3dDaGVjayI6dHJ1ZSwic2hhZG93Q29sb3IiOiIjMzM2NkZGMjAiLCJ0aGVtZV9tb2RlIjoibGlnaHQifX0sImNvbnRlbnQiOnsidGl0bGUiOiJEb21haW4gU2Nhbm5lciIsInBhcmFncmFwaCI6IlNjYW4gYSBkb21haW4gdG8gZ2V0IGl0IGFuYWx5emVkIGZvciBwb3NzaWJsZSBpc3N1ZXMgd2l0aCBETUFSQywgU1BGLCBES0lNIGFuZCBCSU1JIHJlY29yZHMuIiwiYnV0dG9uXzEiOiJTY2FuIE5vdyIsImJ1dHRvbl8yIjoiSW5jcmVhc2UgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9jb250YWN0IiwiZGVhY3RpdmVfd2lkZ2V0X2xpbmsiOnRydWV9fSwiaWF0IjoxNzYxNzg5ODczfQ.hQiVVhwpQ4rh7iUoqmJSbiIlDS3Z5n1zc7N5vMtGXW0"
+        data-id="pzbec9"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InB6YmVjOSIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoidHJ1ZSIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiIiLCJidXR0b25fMSI6IlNjYW4gTm93IiwiYnV0dG9uXzIiOiJJbmNyZWFzZSBTY29yZSIsInJlZGlyZWN0X3VybCI6IiIsImRlYWN0aXZlX3dpZGdldF9saW5rIjoiZmFsc2UifSwiZWRpdGlvbiI6Im1zcCIsImJpbWlfYWN0aXZhdGlvbiI6ImZhbHNlIiwib3JnYW5pemF0aW9uIjp7Im9iamVjdElkIjoib3JnXzY4MDJkN2E5NDU1NjAxYzkxYzA2MjY1OSIsImRvbWFpbiI6InNjYW4ub25ib2FyZGlnaXRhbC5jb20ifX0sImVtYmVkX3ZlcnNpb24iOiIxLjAuMCIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vYXBwLmVhc3lkbWFyYy5jb20vcmVnaXN0ZXIiLCJpYXQiOjE3NjI1NDYwNDZ9.CHQyHwgbzniKDuAA4i1LctE09STnHUUTU4gx7hi5iYU"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {

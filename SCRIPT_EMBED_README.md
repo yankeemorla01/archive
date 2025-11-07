@@ -18,7 +18,7 @@ Simplemente incluye el script en tu página HTML. El script creará automáticam
 </head>
 <body>
     <!-- El script creará automáticamente el contenedor -->
-    <script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"></script>
+    <script src="https://scan.onboardigital.com/domain-scanner-embed.js"></script>
 </body>
 </html>
 ```
@@ -36,7 +36,7 @@ Si quieres especificar dónde debe aparecer el widget:
 <body>
     <div id="mi-widget-container"></div>
     
-    <script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"
+    <script src="https://scan.onboardigital.com/domain-scanner-embed.js"
             data-container-id="mi-widget-container"></script>
 </body>
 </html>
@@ -45,7 +45,7 @@ Si quieres especificar dónde debe aparecer el widget:
 ### Opción 3: Con Configuración Personalizada
 
 ```html
-<script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"
+<script src="https://scan.onboardigital.com/domain-scanner-embed.js"
         data-container-id="domain-scanner-container"
         data-widget-id="tp_aWPt5A"
         data-token="tu-token-aqui"></script>
@@ -82,10 +82,10 @@ Ver el archivo `public/embed-example.html` para un ejemplo completo de uso.
 
 ## 🚀 Despliegue
 
-1. ✅ **Proyecto desplegado en Vercel**
+1. ✅ **Proyecto desplegado en Vercel con dominio personalizado**
 2. El archivo `domain-scanner-embed.js` está disponible en:
    ```
-   https://archive-seven-tau.vercel.app/domain-scanner-embed.js
+   https://scan.onboardigital.com/domain-scanner-embed.js
    ```
 3. Comparte esta URL con tus usuarios para que puedan incluir el widget
 

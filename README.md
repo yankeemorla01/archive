@@ -35,7 +35,8 @@ Sigue las instrucciones en la terminal.
 
 ## 📦 Opciones de Uso
 
-**Dominio desplegado:** [https://archive-seven-tau.vercel.app](https://archive-seven-tau.vercel.app)
+**Dominio desplegado:** [https://scan.onboardigital.com](https://scan.onboardigital.com)  
+**Dominio Vercel (backup):** [https://archive-seven-tau.vercel.app](https://archive-seven-tau.vercel.app)
 
 ### Opción 1: Script Embebible (Recomendado) ⭐
 
@@ -43,11 +44,11 @@ La forma más fácil de incluir el widget en cualquier página HTML:
 
 ```html
 <!-- Uso simple - el script crea el contenedor automáticamente -->
-<script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"></script>
+<script src="https://scan.onboardigital.com/domain-scanner-embed.js"></script>
 
 <!-- O con contenedor personalizado -->
 <div id="mi-widget"></div>
-<script src="https://archive-seven-tau.vercel.app/domain-scanner-embed.js"
+<script src="https://scan.onboardigital.com/domain-scanner-embed.js"
         data-container-id="mi-widget"></script>
 ```
 
@@ -65,7 +66,7 @@ Incrustar como iframe en cualquier página HTML:
 
 ```html
 <iframe 
-  src="https://archive-seven-tau.vercel.app/domain-scanner"
+  src="https://scan.onboardigital.com/domain-scanner"
   width="100%"
   height="800"
   frameborder="0"

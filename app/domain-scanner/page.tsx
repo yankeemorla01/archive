@@ -35,8 +35,8 @@ export default function DomainScannerPage() {
       }
       
       /* Target the widget when it's created */
-      [data-id="tp_fL71Qv"],
-      [data-id="tp_fL71Qv"] > *,
+      [data-id="scxy6w"],
+      [data-id="scxy6w"] > *,
       .easydmarc-widget,
       .easydmarc-widget-container,
       div[data-easydmarc-widget],
@@ -50,7 +50,7 @@ export default function DomainScannerPage() {
       }
       
       /* Ensure iframe within widget is visible */
-      [data-id="tp_fL71Qv"] iframe,
+      [data-id="scxy6w"] iframe,
       .easydmarc-widget iframe {
         width: 100% !important;
         border: none !important;
@@ -59,7 +59,7 @@ export default function DomainScannerPage() {
     `
     
     if (!document.getElementById('domain-scanner-iframe-styles')) {
-      document.head.appendChild(style)
+    document.head.appendChild(style)
     }
 
     return () => {
@@ -79,7 +79,7 @@ export default function DomainScannerPage() {
 
     // Look for widget elements
     const widgetSelectors = [
-      '[data-id="tp_fL71Qv"]',
+      '[data-id="scxy6w"]',
       '.easydmarc-widget',
       '.easydmarc-widget-container',
       'div[data-easydmarc-widget]',
@@ -113,7 +113,7 @@ export default function DomainScannerPage() {
     }
 
     // Check if widget is already in container
-    const widgetInContainer = container.querySelector('[data-id="tp_fL71Qv"], .easydmarc-widget')
+    const widgetInContainer = container.querySelector('[data-id="scxy6w"], .easydmarc-widget')
     if (widgetInContainer) {
       scriptLoadedRef.current = true
     }
@@ -132,10 +132,10 @@ export default function DomainScannerPage() {
             
             // Check if the added element is the widget
             const isWidget = 
-              element.getAttribute('data-id') === 'tp_fL71Qv' ||
+              element.getAttribute('data-id') === 'scxy6w' ||
               element.classList.contains('easydmarc-widget') ||
               element.classList.contains('easydmarc-widget-container') ||
-              element.querySelector('[data-id="tp_fL71Qv"], .easydmarc-widget')
+              element.querySelector('[data-id="scxy6w"], .easydmarc-widget')
             
             if (isWidget && container && !container.contains(element)) {
               // Check if element contains the container (avoid hierarchy error)
@@ -151,7 +151,7 @@ export default function DomainScannerPage() {
             }
             
             // Also check for widget inside the added element
-            const widgetInside = element.querySelector('[data-id="tp_fL71Qv"], .easydmarc-widget, .easydmarc-widget-container')
+            const widgetInside = element.querySelector('[data-id="scxy6w"], .easydmarc-widget, .easydmarc-widget-container')
             if (widgetInside && container && !container.contains(widgetInside)) {
               // Check if widgetInside contains the container (avoid hierarchy error)
               if (widgetInside.contains(container)) {
@@ -183,8 +183,8 @@ export default function DomainScannerPage() {
     <>
       <Script
         id="easydmarc-domain-scanner-iframe"
-        data-id="tp_fL71Qv"
-        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX2ZMNzFRdiIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjQURDMkZGIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBOb3ciLCJidXR0b25fMiI6IkluY3JlYXNlIFNjb3JlIiwicmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJkZWFjdGl2ZV93aWRnZXRfbGluayI6ZmFsc2V9fSwiaWF0IjoxNzYyNTQ5MzQ2fQ.jd2Y17Kgd8ckhtoj7qlkuWtLcBSa8t4DNAPo2ij47fo"
+        data-id="scxy6w"
+        data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNjeHk2dyIsImhlaWdodCI6ImF1dG8iLCJ0eXBlIjoiZG9tYWluLXNjYW5uZXIiLCJ3aWR0aCI6IjEwMCUiLCJib3hfc2hhZG93IjoiMCAwIDEwcHggIzAwMDAwMDI2IiwiYm9yZGVyX3JhZGl1cyI6IjhweCIsImF1dG9pbml0IjoidHJ1ZSIsIm9wdGlvbnMiOnsic3R5bGVzIjp7InRoZW1lIjp7ImJhY2tncm91bmRDb2xvciI6IiMwODE0MzYiLCJ0aXRsZUNvbG9yIjoiI0ZGRkZGRiIsInBhcmFncmFwaENvbG9yIjoiI0ZGRkZGRiIsImJ1dHRvbnNDb2xvciI6IiNBREMyRkYiLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInNoYWRvd0NoZWNrIjoiZmFsc2UiLCJ0aGVtZV9tb2RlIjoiZGFyayJ9fSwiY29udGVudCI6eyJ0aXRsZSI6IkRvbWFpbiBTY2FubmVyIiwicGFyYWdyYXBoIjoiIiwiYnV0dG9uXzEiOiJTY2FuIE5vdyIsImJ1dHRvbl8yIjoiSW5jcmVhc2UgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjoiZmFsc2UifSwiZWRpdGlvbiI6Im1zcCIsImJpbWlfYWN0aXZhdGlvbiI6InRydWUiLCJvcmdhbml6YXRpb24iOnsib2JqZWN0SWQiOiJvcmdfNjgwMmQ3YTk0NTU2MDFjOTFjMDYyNjU5IiwiZG9tYWluIjoic2Nhbi5vbmJvYXJkaWdpdGFsLmNvbSJ9fSwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiZW1iZWRfcmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJpYXQiOjE3NjI1NDk5MzB9.GYDR28TSIUFwI8teDhpMRsIRgH_POnWcbh2Cn7PjhAU"
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="beforeInteractive"
         onLoad={() => {
@@ -216,7 +216,7 @@ export default function DomainScannerPage() {
       {/* Container with data-id - EasyDMARC widget may look for this */}
       <div 
         id="domain-scanner-widget-container"
-        data-id="tp_fL71Qv"
+        data-id="scxy6w"
         ref={containerRef}
         className="w-full min-h-[600px]"
         style={{ 

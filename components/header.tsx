@@ -1,4 +1,6 @@
-import { Logo } from "./logo";
+'use client'
+
+import { ResizableLogo } from "./resizable-logo";
 import { MobileMenu } from "./mobile-menu";
 
 export const Header = () => {
@@ -14,16 +16,26 @@ export const Header = () => {
   return (
     <div className="fixed z-50 top-0 left-0 w-full" style={{ background: '#0E0E0E' }}>
       <header 
-        className="flex items-center justify-between"
+        className="flex items-center"
         style={{ 
           height: '90px',
-          padding: '0 60px'
+          padding: '0 60px',
+          overflow: 'hidden',
+          maxWidth: '100%',
+          position: 'relative'
         }}
       >
-        <a href="https://www.onboardigital.com/" style={{ marginRight: '60px' }}>
-          <Logo className="h-[42px] w-auto" />
-        </a>
-        <nav className="flex max-lg:hidden items-center">
+        <div style={{ flex: '0 0 auto' }}>
+          <ResizableLogo />
+        </div>
+        <nav 
+          className="flex max-lg:hidden items-center"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)'
+          }}
+        >
           {navItems.map((item, index) => (
             <a
               className={`text-white transition-colors ease-out duration-150 ${
@@ -41,19 +53,21 @@ export const Header = () => {
             </a>
           ))}
         </nav>
-        <a
-          className="max-lg:hidden text-white cursor-pointer"
-          style={{
-            border: '1.5px solid #fff',
-            padding: '8px 18px',
-            borderRadius: '6px',
-            fontSize: '15px',
-            background: 'transparent'
-          }}
-          href="https://www.onboardigital.com/"
-        >
-          Get Started
-        </a>
+        <div style={{ flex: '0 0 auto', marginLeft: 'auto' }}>
+          <a
+            className="max-lg:hidden text-white cursor-pointer"
+            style={{
+              border: '1.5px solid #fff',
+              padding: '8px 18px',
+              borderRadius: '6px',
+              fontSize: '15px',
+              background: 'transparent'
+            }}
+            href="https://www.onboardigital.com/"
+          >
+            Get Started
+          </a>
+        </div>
         <MobileMenu />
       </header>
     </div>

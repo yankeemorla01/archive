@@ -25,9 +25,7 @@ export const Header = () => {
           position: 'relative'
         }}
       >
-        <div style={{ flex: '0 0 auto' }}>
-          <ResizableLogo />
-        </div>
+        <ResizableLogo />
         <nav 
           className="flex max-lg:hidden items-center"
           style={{
@@ -38,13 +36,14 @@ export const Header = () => {
         >
           {navItems.map((item, index) => (
             <a
-              className={`text-white transition-colors ease-out duration-150 ${
-                item.highlight ? "text-[#E65C5C]" : "hover:text-[#E65C5C]"
+              className={`transition-colors ease-out duration-150 ${
+                item.highlight ? "" : "text-white hover:text-[#FD6262]"
               }`}
               style={{
                 fontSize: '16px',
                 fontWeight: 500,
-                marginRight: index < navItems.length - 1 ? '28px' : '0'
+                marginRight: index < navItems.length - 1 ? '28px' : '0',
+                color: item.highlight ? '#FD6262' : undefined
               }}
               href={item.href}
               key={item.name}

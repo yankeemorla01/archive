@@ -577,9 +577,6 @@ export default function Home() {
       <div className="relative min-h-screen flex flex-col items-center justify-center py-12 px-4 pt-24 md:pt-32">
         <GL hovering={false} />
         <div className="relative z-50 w-full max-w-5xl" style={{ zIndex: 50 }}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-sentient text-center mb-12 text-foreground">
-            Scan your website for free
-          </h1>
           <div 
             className="w-full min-h-[600px]" 
             id="domain-scanner-container"

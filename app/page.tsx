@@ -117,6 +117,27 @@ export default function Home() {
         if (widget && widget.tagName !== 'SCRIPT') {
           console.log('Found widget with selector:', selector, widget)
           
+          // If it's an iframe, modify the referrer in the URL
+          if (widget.tagName === 'IFRAME') {
+            const iframe = widget as HTMLIFrameElement
+            const src = iframe.src
+            if (src && src.includes('referrer=')) {
+              // Replace scan.onboardigital.com with onboardigital.com in referrer
+              const modifiedSrc = src.replace(
+                /referrer=([^&]*)/,
+                (match, referrerValue) => {
+                  const decoded = decodeURIComponent(referrerValue)
+                  const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
+                  return 'referrer=' + encodeURIComponent(fixed)
+                }
+              )
+              if (modifiedSrc !== src) {
+                iframe.src = modifiedSrc
+                console.log('Modified iframe referrer')
+              }
+            }
+          }
+          
           // Check if widget already contains the container (avoid hierarchy error)
           if (widget.contains(container)) {
             console.log('Widget contains container, skipping move')
@@ -187,6 +208,23 @@ export default function Home() {
       for (const iframe of iframes) {
         if (iframe.src.includes('easydmarc') || iframe.src.includes('domain-scanner')) {
           console.log(`Found widget iframe:`, iframe.src, iframe)
+          
+          // Modify referrer in iframe URL
+          const src = iframe.src
+          if (src && src.includes('referrer=')) {
+            const modifiedSrc = src.replace(
+              /referrer=([^&]*)/,
+              (match, referrerValue) => {
+                const decoded = decodeURIComponent(referrerValue)
+                const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
+                return 'referrer=' + encodeURIComponent(fixed)
+              }
+            )
+            if (modifiedSrc !== src) {
+              iframe.src = modifiedSrc
+              console.log('Modified iframe referrer in iframe search')
+            }
+          }
           
           // Check if iframe contains the container (avoid hierarchy error)
           if (iframe.contains(container)) {
@@ -350,6 +388,51 @@ export default function Home() {
       return inputFound || buttonFound
     }
 
+    // Function to fix iframe referrer
+    const fixIframeReferrer = (iframe: HTMLIFrameElement) => {
+      const src = iframe.src
+      if (src && src.includes('referrer=') && src.includes('scan.onboardigital.com')) {
+        const modifiedSrc = src.replace(
+          /referrer=([^&]*)/,
+          (match, referrerValue) => {
+            const decoded = decodeURIComponent(referrerValue)
+            const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
+            return 'referrer=' + encodeURIComponent(fixed)
+          }
+        )
+        if (modifiedSrc !== src) {
+          iframe.src = modifiedSrc
+          console.log('Fixed iframe referrer via observer')
+        }
+      }
+    }
+
+    // Observer to catch iframes as they're created
+    const iframeObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            const element = node as HTMLElement
+            // Check if it's an iframe
+            if (element.tagName === 'IFRAME') {
+              fixIframeReferrer(element as HTMLIFrameElement)
+            }
+            // Check for iframes inside the added element
+            const iframes = element.querySelectorAll('iframe')
+            iframes.forEach((iframe) => {
+              fixIframeReferrer(iframe)
+            })
+          }
+        })
+      })
+    })
+
+    // Observe the entire document for iframe creation
+    iframeObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    })
+
     // Start checking immediately and more frequently
     let checkInterval: NodeJS.Timeout | null = null
     let captureSetup = false
@@ -394,6 +477,7 @@ export default function Home() {
       if (checkInterval) {
         clearInterval(checkInterval)
       }
+      iframeObserver.disconnect()
       const existingStyle = document.getElementById('domain-scanner-styles')
       if (existingStyle) {
         document.head.removeChild(existingStyle)

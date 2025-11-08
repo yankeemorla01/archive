@@ -16,12 +16,12 @@ export const Header = () => {
       <header 
         className="flex items-center justify-between"
         style={{ 
-          height: '90px',
-          padding: '0 60px'
+          height: '45px',
+          padding: '0 30px'
         }}
       >
-        <a href="https://www.onboardigital.com/" style={{ marginRight: '60px' }}>
-          <Logo className="h-[42px] w-auto" />
+        <a href="https://www.onboardigital.com/" style={{ marginRight: '30px' }}>
+          <Logo className="h-[21px] w-auto" />
         </a>
         <nav className="flex max-lg:hidden items-center">
           {navItems.map((item, index) => (
@@ -30,9 +30,9 @@ export const Header = () => {
                 item.highlight ? "text-[#E65C5C]" : "hover:text-[#E65C5C]"
               }`}
               style={{
-                fontSize: '16px',
+                fontSize: '12px',
                 fontWeight: 500,
-                marginRight: index < navItems.length - 1 ? '28px' : '0'
+                marginRight: index < navItems.length - 1 ? '14px' : '0'
               }}
               href={item.href}
               key={item.name}
@@ -44,10 +44,10 @@ export const Header = () => {
         <a
           className="max-lg:hidden text-white cursor-pointer"
           style={{
-            border: '1.5px solid #fff',
-            padding: '8px 18px',
-            borderRadius: '6px',
-            fontSize: '15px',
+            border: '0.75px solid #fff',
+            padding: '4px 9px',
+            borderRadius: '3px',
+            fontSize: '11px',
             background: 'transparent'
           }}
           href="https://www.onboardigital.com/"

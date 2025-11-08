@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import Script from 'next/script'
-import { GL } from '@/components/gl'
 import { Header } from '@/components/header'
 
 export default function Home() {
@@ -575,7 +574,6 @@ export default function Home() {
         }}
       />
       <div className="relative min-h-screen flex flex-col items-center justify-center py-12 px-4 pt-24 md:pt-32">
-        <GL hovering={false} />
         <div className="relative z-50 w-full max-w-5xl" style={{ zIndex: 50 }}>
           <div 
             className="w-full min-h-[600px]" 

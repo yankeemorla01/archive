@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Menu, X } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 interface MobileMenuProps {
@@ -14,12 +13,12 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: "Home", href: "/" },
-    { name: "Vendors", href: "/vendors" },
-    { name: "Services", href: "/services" },
-    { name: "Cybersecurity", href: "/cybersecurity" },
-    { name: "Appointment", href: "/appointment" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "https://www.onboardigital.com/" },
+    { name: "Vendors", href: "https://www.onboardigital.com/vendors" },
+    { name: "Services", href: "https://www.onboardigital.com/services" },
+    { name: "Cybersecurity", href: "https://www.onboardigital.com/cybersecurity" },
+    { name: "Appointment", href: "https://www.onboardigital.com/appointment" },
+    { name: "Contact", href: "https://www.onboardigital.com/contact" },
   ];
 
   const handleLinkClick = () => {
@@ -62,24 +61,24 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
 
           <nav className="flex flex-col space-y-6 container mx-auto">
             {menuItems.map((item) => (
-              <Link
+              <a
                 key={item.name}
                 href={item.href}
                 onClick={handleLinkClick}
-                className="text-xl font-mono uppercase text-foreground/60 transition-colors ease-out duration-150 hover:text-foreground/100 py-2"
+                className="text-xl font-mono uppercase text-foreground/60 transition-colors ease-out duration-150 hover:text-[#FD6262] py-2"
               >
                 {item.name}
-              </Link>
+              </a>
             ))}
 
             <div className="mt-6">
-              <Link
-                href="/get-started"
+              <a
+                href="https://www.onboardigital.com/"
                 onClick={handleLinkClick}
-                className="inline-block text-xl font-serif text-foreground/80 transition-colors ease-out duration-150 hover:text-foreground py-2 border border-foreground/30 rounded px-4"
+                className="inline-block text-xl font-serif text-foreground/80 transition-colors ease-out duration-150 hover:text-[#FD6262] py-2 border border-foreground/30 rounded px-4"
               >
                 Get Started
-              </Link>
+              </a>
             </div>
           </nav>
         </Dialog.Content>

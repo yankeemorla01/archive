@@ -9,8 +9,8 @@ const LOGO_LOCKED_KEY = 'onboardigital-logo-locked'
 
 // Valores por defecto guardados para producción (Vercel)
 // Estos valores se usarán si no hay valores en localStorage
-const DEFAULT_LOGO_SIZE = 50 // Cambiar este valor con el tamaño final
-const DEFAULT_LOGO_POSITION = { left: 60, top: 0 } // Cambiar estos valores con la posición final
+const DEFAULT_LOGO_SIZE = 80 // Tamaño final configurado
+const DEFAULT_LOGO_POSITION = { left: 60, top: 0 } // Posición final (ajustar si es necesario)
 
 // Función para obtener valores iniciales desde localStorage o usar defaults
 const getInitialSize = () => {
@@ -88,15 +88,25 @@ export const ResizableLogo = () => {
 
   // Guardar tamaño cuando cambia (solo si no está bloqueado)
   useEffect(() => {
-    if (!isLocked) {
-      localStorage.setItem(LOGO_SIZE_KEY, logoHeight.toString())
+    if (!isLocked && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(LOGO_SIZE_KEY, logoHeight.toString())
+        console.log('💾 Tamaño guardado:', logoHeight, 'px')
+      } catch (e) {
+        console.error('Error guardando tamaño:', e)
+      }
     }
   }, [logoHeight, isLocked])
 
   // Guardar posición cuando cambia (solo si no está bloqueado)
   useEffect(() => {
-    if (!isLocked) {
-      localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify(logoPosition))
+    if (!isLocked && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify(logoPosition))
+        console.log('💾 Posición guardada:', logoPosition)
+      } catch (e) {
+        console.error('Error guardando posición:', e)
+      }
     }
   }, [logoPosition, isLocked])
 
@@ -124,9 +134,11 @@ export const ResizableLogo = () => {
     const finalSize = logoHeight.toString()
     const finalPosition = JSON.stringify(logoPosition)
     
-    localStorage.setItem(LOGO_SIZE_KEY, finalSize)
-    localStorage.setItem(LOGO_POSITION_KEY, finalPosition)
-    localStorage.setItem(LOGO_LOCKED_KEY, 'true')
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOGO_SIZE_KEY, finalSize)
+      localStorage.setItem(LOGO_POSITION_KEY, finalPosition)
+      localStorage.setItem(LOGO_LOCKED_KEY, 'true')
+    }
     
     setIsLocked(true)
     
@@ -134,6 +146,14 @@ export const ResizableLogo = () => {
     console.log('✅ Logo guardado permanentemente:')
     console.log('   Tamaño:', finalSize, 'px')
     console.log('   Posición:', finalPosition)
+  }
+
+  const handleUnlock = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOGO_LOCKED_KEY, 'false')
+    }
+    setIsLocked(false)
+    console.log('🔓 Logo desbloqueado - puedes ajustarlo de nuevo')
   }
 
   // Efecto para redimensionar
@@ -146,8 +166,20 @@ export const ResizableLogo = () => {
       setLogoHeight(newHeight)
     }
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e: MouseEvent) => {
       setIsResizing(false)
+      // El useEffect ya guardará automáticamente cuando logoHeight cambie
+      // Pero forzamos un guardado adicional aquí para asegurar
+      setTimeout(() => {
+        if (!isLocked && typeof window !== 'undefined') {
+          try {
+            const saved = localStorage.getItem(LOGO_SIZE_KEY)
+            console.log('💾 Verificación - Tamaño en localStorage:', saved)
+          } catch (e) {
+            console.error('Error verificando tamaño:', e)
+          }
+        }
+      }, 100)
     }
 
     document.addEventListener('mousemove', handleMouseMove)
@@ -335,23 +367,46 @@ export const ResizableLogo = () => {
         )}
 
         {isLocked && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '-25px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              fontSize: '10px',
-              color: '#4ade80',
-              background: 'rgba(0, 0, 0, 0.7)',
-              padding: '2px 6px',
-              borderRadius: '4px',
-              whiteSpace: 'nowrap',
-              zIndex: 1001
-            }}
-          >
-            ✓ Posición guardada
-          </div>
+          <>
+            <div
+              style={{
+                position: 'absolute',
+                top: '-35px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                fontSize: '10px',
+                color: '#4ade80',
+                background: 'rgba(0, 0, 0, 0.7)',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                whiteSpace: 'nowrap',
+                zIndex: 1001
+              }}
+            >
+              ✓ Posición guardada
+            </div>
+            <button
+              onClick={handleUnlock}
+              style={{
+                position: 'absolute',
+                top: '-25px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                fontSize: '10px',
+                color: '#fff',
+                background: '#6b7280',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                border: 'none',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                zIndex: 1001,
+                marginTop: '15px'
+              }}
+            >
+              Desbloquear
+            </button>
+          </>
         )}
       </div>
     </div>

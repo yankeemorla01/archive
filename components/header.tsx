@@ -20,7 +20,7 @@ export const Header = () => {
         <nav className="flex max-lg:hidden absolute left-1/2 -translate-x-1/2 items-center justify-center gap-x-6 md:gap-x-8">
           {navItems.map((item) => (
             <a
-              className={`inline-block font-serif text-sm md:text-base transition-colors ease-out duration-150 ${
+              className={`inline-block font-serif text-base md:text-lg transition-colors ease-out duration-150 ${
                 item.highlight
                   ? "text-[#FD6262]"
                   : "text-white/80 hover:text-[#FD6262]"
@@ -33,7 +33,7 @@ export const Header = () => {
           ))}
         </nav>
         <a
-          className="max-lg:hidden transition-colors ease-out duration-150 font-serif text-sm md:text-base text-white/80 hover:text-[#FD6262] border border-white/30 rounded px-4 py-2"
+          className="max-lg:hidden transition-colors ease-out duration-150 font-serif text-base md:text-lg text-white/80 hover:text-[#FD6262] border border-white/30 rounded px-4 py-2"
           href="https://www.onboardigital.com/"
         >
           Get Started

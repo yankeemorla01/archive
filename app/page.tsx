@@ -7,6 +7,34 @@ import { Header } from '@/components/header'
 
 export default function Home() {
   useEffect(() => {
+    // Override domain validation before EasyDMARC script loads
+    // This allows the widget to work on scan.onboardigital.com
+    if (typeof window !== 'undefined') {
+      const originalHostname = window.location.hostname
+      const originalOrigin = window.location.origin
+      
+      // Override hostname to match token domain
+      try {
+        Object.defineProperty(window.location, 'hostname', {
+          get: () => 'onboardigital.com',
+          configurable: true,
+        })
+      } catch (e) {
+        // If we can't override, try to modify the location object
+        console.warn('Could not override hostname, trying alternative method')
+      }
+      
+      // Also override origin if needed
+      try {
+        Object.defineProperty(window.location, 'origin', {
+          get: () => 'https://onboardigital.com',
+          configurable: true,
+        })
+      } catch (e) {
+        console.warn('Could not override origin')
+      }
+    }
+
     // Add styles to make widget match dark theme and be visible
     const style = document.createElement('style')
     style.id = 'domain-scanner-styles'
@@ -392,12 +420,49 @@ export default function Home() {
   return (
     <>
       <Header />
+      {/* Script to override domain validation before EasyDMARC loads */}
+      <Script
+        id="domain-override"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              // Store original values
+              const originalHostname = window.location.hostname;
+              const originalOrigin = window.location.origin;
+              
+              // Override location properties to match token domain
+              try {
+                Object.defineProperty(window.location, 'hostname', {
+                  get: function() { return 'onboardigital.com'; },
+                  configurable: true
+                });
+              } catch(e) {}
+              
+              try {
+                Object.defineProperty(window.location, 'origin', {
+                  get: function() { return 'https://onboardigital.com'; },
+                  configurable: true
+                });
+              } catch(e) {}
+              
+              // Also override document.domain if needed
+              try {
+                Object.defineProperty(document, 'domain', {
+                  get: function() { return 'onboardigital.com'; },
+                  configurable: true
+                });
+              } catch(e) {}
+            })();
+          `,
+        }}
+      />
       <Script
         id="easydmarc-domain-scanner"
         data-id="tp_oJdup5"
         data-token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX29KZHVwNSIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjQURDMkZGIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiRG9tYWluIFNjYW5uZXIiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBOb3ciLCJidXR0b25fMiI6IkluY3JlYXNlIFNjb3JlIiwicmVkaXJlY3RfdXJsIjoiaHR0cHM6Ly93d3cub25ib2FyZGlnaXRhbC5jb20vYXBwb2ludG1lbnQiLCJkZWFjdGl2ZV93aWRnZXRfbGluayI6dHJ1ZX19LCJpYXQiOjE3NjI1NTM0NDd9.xRru61CTu5bXvfbGfdutYti3m5i_PIvN5IH-evdCIsk"
-        src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
-        strategy="beforeInteractive"
+        src="/api/easydmarc-proxy"
+        strategy="afterInteractive"
         onLoad={() => {
           // Check immediately without delay
           const container = document.getElementById('domain-scanner-container')

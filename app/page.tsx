@@ -448,7 +448,7 @@ export default function Home() {
         }
       }
     }, 500)
-
+    
     // Then check periodically with shorter intervals
     checkInterval = setInterval(() => {
       const found = findAndMoveWidget()

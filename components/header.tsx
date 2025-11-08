@@ -13,9 +13,9 @@ export const Header = () => {
 
   return (
     <div className="fixed z-50 top-0 left-0 w-full bg-black">
-      <header className="flex items-center justify-between container py-4 md:py-6">
-        <a href="https://www.onboardigital.com/">
-          <Logo className="h-8 md:h-10 w-auto" />
+      <header className="flex items-center justify-between container py-3 md:py-4">
+        <a href="https://www.onboardigital.com/" className="flex items-center">
+          <Logo className="h-5 md:h-6 w-auto" />
         </a>
         <nav className="flex max-lg:hidden absolute left-1/2 -translate-x-1/2 items-center justify-center gap-x-6 md:gap-x-8">
           {navItems.map((item) => (

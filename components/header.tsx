@@ -21,7 +21,7 @@ export const Header = () => {
         }}
       >
         <a href="https://www.onboardigital.com/" style={{ marginRight: '60px' }}>
-          <Logo className="h-[6px] w-auto" />
+          <Logo className="h-[42px] w-auto" />
         </a>
         <nav className="flex max-lg:hidden items-center">
           {navItems.map((item, index) => (

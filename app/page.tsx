@@ -7,34 +7,6 @@ import { Header } from '@/components/header'
 
 export default function Home() {
   useEffect(() => {
-    // Override domain validation before EasyDMARC script loads
-    // This allows the widget to work on scan.onboardigital.com
-    if (typeof window !== 'undefined') {
-      const originalHostname = window.location.hostname
-      const originalOrigin = window.location.origin
-      
-      // Override hostname to match token domain
-      try {
-        Object.defineProperty(window.location, 'hostname', {
-          get: () => 'onboardigital.com',
-          configurable: true,
-        })
-      } catch (e) {
-        // If we can't override, try to modify the location object
-        console.warn('Could not override hostname, trying alternative method')
-      }
-      
-      // Also override origin if needed
-      try {
-        Object.defineProperty(window.location, 'origin', {
-          get: () => 'https://onboardigital.com',
-          configurable: true,
-        })
-      } catch (e) {
-        console.warn('Could not override origin')
-      }
-    }
-
     // Add styles to make widget match dark theme and be visible
     const style = document.createElement('style')
     style.id = 'domain-scanner-styles'
@@ -176,12 +148,16 @@ export default function Home() {
         }
         
         // Check for widget-like attributes or content
+        const hasInput = div.querySelector('input[placeholder*="domain"], input[placeholder*="Domain"]')
+        const hasScanButton = Array.from(div.querySelectorAll('button')).some(
+          btn => btn.textContent?.toLowerCase().includes('scan')
+        )
         const hasWidgetContent = 
           div.textContent?.includes('Domain Scanner') ||
           div.textContent?.includes('Scan a domain') ||
           div.textContent?.includes('Enter your domain') ||
-          div.querySelector('input[placeholder*="domain"]') ||
-          div.querySelector('button:contains("Scan")')
+          hasInput ||
+          hasScanButton
         
         if (hasWidgetContent) {
           console.log('Found potential widget div:', div, div.className, div.id)
@@ -296,7 +272,6 @@ export default function Home() {
         const selectors = [
           '[data-id="tp_oJdup5"] button',
           '.easydmarc-widget button',
-          'button:contains("Scan")',
           'button[type="submit"]'
         ]
 
@@ -308,6 +283,15 @@ export default function Home() {
             }
           }
         }
+        
+        // Also search all buttons in container as fallback
+        const allButtons = container.querySelectorAll('button')
+        for (const button of allButtons) {
+          if (button.textContent?.toLowerCase().includes('scan')) {
+            return button as HTMLButtonElement
+          }
+        }
+        
         return null
       }
 
@@ -421,38 +405,65 @@ export default function Home() {
     <>
       <Header />
       {/* Script to override domain validation before EasyDMARC loads */}
-      <Script
-        id="domain-override"
-        strategy="beforeInteractive"
+      <script
         dangerouslySetInnerHTML={{
           __html: `
             (function() {
-              // Store original values
-              const originalHostname = window.location.hostname;
-              const originalOrigin = window.location.origin;
+              'use strict';
+              // Override domain validation for EasyDMARC widget
+              // This allows the widget to work on scan.onboardigital.com
               
-              // Override location properties to match token domain
+              const targetDomain = 'onboardigital.com';
+              
+              // Method 1: Override hostname directly if possible (silent)
               try {
-                Object.defineProperty(window.location, 'hostname', {
-                  get: function() { return 'onboardigital.com'; },
-                  configurable: true
+                const originalLocation = window.location;
+                Object.defineProperty(originalLocation, 'hostname', {
+                  get: function() { return targetDomain; },
+                  configurable: true,
+                  enumerable: true
                 });
-              } catch(e) {}
+              } catch(e) {
+                // Silently fail - browser may protect this property
+              }
               
-              try {
-                Object.defineProperty(window.location, 'origin', {
-                  get: function() { return 'https://onboardigital.com'; },
-                  configurable: true
-                });
-              } catch(e) {}
-              
-              // Also override document.domain if needed
+              // Method 2: Override document.domain (silent)
               try {
                 Object.defineProperty(document, 'domain', {
-                  get: function() { return 'onboardigital.com'; },
+                  get: function() { return targetDomain; },
                   configurable: true
                 });
-              } catch(e) {}
+              } catch(e) {
+                // Silently fail
+              }
+              
+              // Method 3: Intercept fetch/XHR calls to modify headers
+              const originalFetch = window.fetch;
+              window.fetch = function(...args) {
+                const url = args[0];
+                if (typeof url === 'string' && url.includes('easydmarc.com')) {
+                  // Modify headers to include correct domain
+                  const options = args[1] || {};
+                  const headers = new Headers(options.headers || {});
+                  headers.set('Referer', 'https://' + targetDomain);
+                  headers.set('Origin', 'https://' + targetDomain);
+                  
+                  return originalFetch.apply(this, [
+                    url,
+                    { ...options, headers: headers }
+                  ]);
+                }
+                return originalFetch.apply(this, args);
+              };
+              
+              // Method 4: Intercept XMLHttpRequest if used
+              const originalXHROpen = XMLHttpRequest.prototype.open;
+              XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+                if (typeof url === 'string' && url.includes('easydmarc.com')) {
+                  // Modify URL or headers if needed
+                }
+                return originalXHROpen.apply(this, [method, url, ...rest]);
+              };
             })();
           `,
         }}

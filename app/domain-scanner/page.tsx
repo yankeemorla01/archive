@@ -343,26 +343,57 @@ export default function DomainScannerPage() {
   return (
     <>
       {/* Script to override domain validation before EasyDMARC loads */}
-      <Script
-        id="domain-override-iframe"
-        strategy="beforeInteractive"
+      <script
         dangerouslySetInnerHTML={{
           __html: `
             (function() {
-              // Override location properties to match token domain
+              'use strict';
+              const targetDomain = 'onboardigital.com';
+              
               try {
-                Object.defineProperty(window.location, 'hostname', {
-                  get: function() { return 'onboardigital.com'; },
+                const originalLocation = window.location;
+                Object.defineProperty(originalLocation, 'hostname', {
+                  get: function() { return targetDomain; },
+                  configurable: true,
+                  enumerable: true
+                });
+              } catch(e) {
+                try {
+                  window.__location_hostname = targetDomain;
+                } catch(e2) {}
+              }
+              
+              try {
+                Object.defineProperty(document, 'domain', {
+                  get: function() { return targetDomain; },
                   configurable: true
                 });
               } catch(e) {}
               
-              try {
-                Object.defineProperty(window.location, 'origin', {
-                  get: function() { return 'https://onboardigital.com'; },
-                  configurable: true
-                });
-              } catch(e) {}
+              const originalFetch = window.fetch;
+              window.fetch = function(...args) {
+                const url = args[0];
+                if (typeof url === 'string' && url.includes('easydmarc.com')) {
+                  if (args[1] && args[1].headers) {
+                    args[1].headers = new Headers(args[1].headers);
+                    args[1].headers.set('Referer', 'https://' + targetDomain);
+                    args[1].headers.set('Origin', 'https://' + targetDomain);
+                  } else if (args[1]) {
+                    args[1].headers = new Headers({
+                      'Referer': 'https://' + targetDomain,
+                      'Origin': 'https://' + targetDomain
+                    });
+                  } else {
+                    args[1] = {
+                      headers: {
+                        'Referer': 'https://' + targetDomain,
+                        'Origin': 'https://' + targetDomain
+                      }
+                    };
+                  }
+                }
+                return originalFetch.apply(this, args);
+              };
             })();
           `,
         }}

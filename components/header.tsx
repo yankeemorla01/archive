@@ -22,7 +22,7 @@ export const Header = () => {
             <a
               className={`inline-block font-serif text-sm md:text-base transition-colors ease-out duration-150 ${
                 item.highlight
-                  ? "text-[#FF6B9D]"
+                  ? "text-[#FD6262]"
                   : "text-white/80 hover:text-[#FD6262]"
               }`}
               href={item.href}

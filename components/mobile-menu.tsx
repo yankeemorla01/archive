@@ -3,7 +3,8 @@
 import { cn } from "@/lib/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 interface MobileMenuProps {
   className?: string;
@@ -11,14 +12,15 @@ interface MobileMenuProps {
 
 export const MobileMenu = ({ className }: MobileMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const menuItems = [
-    { name: "Home", href: "https://www.onboardigital.com/" },
-    { name: "Vendors", href: "https://www.onboardigital.com/vendors" },
-    { name: "Services", href: "https://www.onboardigital.com/services" },
-    { name: "Cybersecurity", href: "https://www.onboardigital.com/cybersecurity" },
-    { name: "Appointment", href: "https://www.onboardigital.com/appointment" },
-    { name: "Contact", href: "https://www.onboardigital.com/contact" },
+    { name: "Home", href: "https://www.onboardigital.com/", highlight: false },
+    { name: "Vendors", href: "https://www.onboardigital.com/vendors", highlight: false },
+    { name: "Services", href: "https://www.onboardigital.com/services", highlight: false },
+    { name: "Cybersecurity", href: "https://www.onboardigital.com/cybersecurity", highlight: true },
+    { name: "Appointment", href: "https://www.onboardigital.com/appointment", highlight: false },
+    { name: "Contact", href: "https://www.onboardigital.com/contact", highlight: false },
   ];
 
   const handleLinkClick = () => {
@@ -30,20 +32,20 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
       <Dialog.Trigger asChild>
         <button
           className={cn(
-            "group lg:hidden p-2 text-foreground transition-colors",
+            "group lg:hidden p-2 text-white transition-colors relative z-[10001]",
             className
           )}
           aria-label="Open menu"
         >
-          <Menu className="group-[[data-state=open]]:hidden" size={24} />
-          <X className="hidden group-[[data-state=open]]:block" size={24} />
+          {!isOpen && <Menu size={24} />}
+          {isOpen && <X size={24} />}
         </button>
       </Dialog.Trigger>
 
       <Dialog.Portal>
         <div
           data-overlay="true"
-          className="fixed z-30 inset-0 bg-black/50 backdrop-blur-sm"
+          className="fixed z-[9999] inset-0 bg-black/50 backdrop-blur-sm"
         />
 
         <Dialog.Content
@@ -55,9 +57,24 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
               e.preventDefault();
             }
           }}
-          className="fixed top-0 left-0 w-full z-40 py-28 md:py-40"
+          className="fixed top-0 left-0 w-full z-[10000] py-28 md:py-40"
+          style={{ 
+            zIndex: 10000,
+            background: '#000000'
+          }}
         >
           <Dialog.Title className="sr-only">Menu</Dialog.Title>
+
+          {/* Botón de cerrar visible en el menú */}
+          <Dialog.Close asChild>
+            <button
+              className="absolute top-4 right-4 lg:hidden p-2 text-white hover:text-[#FD6262] transition-colors z-[10001]"
+              aria-label="Close menu"
+              style={{ zIndex: 10001 }}
+            >
+              <X size={28} />
+            </button>
+          </Dialog.Close>
 
           <nav className="flex flex-col space-y-6 container mx-auto">
             {menuItems.map((item) => (
@@ -65,7 +82,12 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
                 key={item.name}
                 href={item.href}
                 onClick={handleLinkClick}
-                className="text-xl font-mono uppercase text-foreground/60 transition-colors ease-out duration-150 hover:text-[#FD6262] py-2"
+                className={cn(
+                  "text-xl font-mono uppercase transition-colors ease-out duration-150 py-2",
+                  item.highlight 
+                    ? "text-[#FD6262]" 
+                    : "text-white hover:text-[#FD6262]"
+                )}
               >
                 {item.name}
               </a>
@@ -75,7 +97,7 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
               <a
                 href="https://www.onboardigital.com/"
                 onClick={handleLinkClick}
-                className="inline-block text-xl font-serif text-foreground/80 transition-colors ease-out duration-150 hover:text-[#FD6262] py-2 border border-foreground/30 rounded px-4"
+                className="inline-block text-xl font-serif text-white transition-colors ease-out duration-150 hover:text-[#FD6262] py-2 border border-white/30 rounded px-4"
               >
                 Get Started
               </a>

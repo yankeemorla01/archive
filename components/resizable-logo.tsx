@@ -73,7 +73,8 @@ export const ResizableLogo = () => {
         top: `${logoPosition.top}px`,
         display: 'flex',
         alignItems: 'center',
-        maxHeight: '90px'
+        maxHeight: '90px',
+        zIndex: 100
       }}
     >
       <div

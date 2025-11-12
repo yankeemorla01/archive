@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 
 /**
@@ -13,6 +13,7 @@ import Script from 'next/script'
 export default function DomainScannerPage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const scriptLoadedRef = useRef(false)
+  const [widgetReady, setWidgetReady] = useState(false)
 
   useEffect(() => {
     // Add styles to ensure widget is visible and properly styled
@@ -32,6 +33,49 @@ export default function DomainScannerPage() {
         min-height: 600px !important;
         position: relative !important;
         background: transparent !important;
+      }
+      
+      /* Mobile-specific styles */
+      @media (max-width: 768px) {
+        #domain-scanner-widget-container {
+          padding: 0.75rem !important;
+          min-height: 500px !important;
+        }
+        
+        /* Ensure widget is visible on mobile */
+        [data-id="tp_oJdup5"],
+        [data-id="tp_oJdup5"] > *,
+        .easydmarc-widget,
+        .easydmarc-widget-container {
+          width: 100% !important;
+          max-width: 100vw !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          box-sizing: border-box !important;
+        }
+        
+        /* Fix text visibility on mobile */
+        [data-id="tp_oJdup5"] *,
+        .easydmarc-widget * {
+          max-width: 100% !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+        }
+        
+        /* Ensure inputs and buttons are properly sized on mobile */
+        [data-id="tp_oJdup5"] input,
+        .easydmarc-widget input {
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+        }
+        
+        [data-id="tp_oJdup5"] button,
+        .easydmarc-widget button {
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+        }
       }
       
       /* Target the widget when it's created */
@@ -56,6 +100,21 @@ export default function DomainScannerPage() {
         border: none !important;
         display: block !important;
       }
+      
+      /* Loading state - hide widget until ready */
+      #domain-scanner-widget-container:not(.widget-ready) [data-id="tp_oJdup5"],
+      #domain-scanner-widget-container:not(.widget-ready) .easydmarc-widget {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      
+      /* Show widget when ready */
+      #domain-scanner-widget-container.widget-ready [data-id="tp_oJdup5"],
+      #domain-scanner-widget-container.widget-ready .easydmarc-widget {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transition: opacity 0.3s ease-in-out !important;
+      }
     `
     
     if (!document.getElementById('domain-scanner-iframe-styles')) {
@@ -72,10 +131,8 @@ export default function DomainScannerPage() {
 
   // Function to check for widget after script loads
   const checkForWidget = () => {
-    if (scriptLoadedRef.current) return
-    
     const container = containerRef.current
-    if (!container) return
+    if (!container) return false
 
     // Look for widget elements
     const widgetSelectors = [
@@ -92,31 +149,53 @@ export default function DomainScannerPage() {
         // Check if widget contains the container (avoid hierarchy error)
         if (widget.contains(container)) {
           console.log('Widget contains container, skipping move')
-          scriptLoadedRef.current = true
-          return
+          // Widget is already in place, mark as ready
+          if (!scriptLoadedRef.current) {
+            scriptLoadedRef.current = true
+            container.classList.add('widget-ready')
+            setWidgetReady(true)
+          }
+          return true
         }
         
         // Check if widget is already in container
         if (container.contains(widget)) {
-          scriptLoadedRef.current = true
-          return
+          if (!scriptLoadedRef.current) {
+            scriptLoadedRef.current = true
+            container.classList.add('widget-ready')
+            setWidgetReady(true)
+          }
+          return true
         }
         
         // Move widget to container if it's not already there
         container.appendChild(widget as Node)
         scriptLoadedRef.current = true
-        return
+        container.classList.add('widget-ready')
+        setWidgetReady(true)
+        return true
       } else if (widget && container.contains(widget)) {
-        scriptLoadedRef.current = true
-        return
+        if (!scriptLoadedRef.current) {
+          scriptLoadedRef.current = true
+          container.classList.add('widget-ready')
+          setWidgetReady(true)
+        }
+        return true
       }
     }
 
     // Check if widget is already in container
     const widgetInContainer = container.querySelector('[data-id="tp_oJdup5"], .easydmarc-widget')
     if (widgetInContainer) {
-      scriptLoadedRef.current = true
+      if (!scriptLoadedRef.current) {
+        scriptLoadedRef.current = true
+        container.classList.add('widget-ready')
+        setWidgetReady(true)
+      }
+      return true
     }
+    
+    return false
   }
 
   // Function to capture domain data from widget
@@ -277,13 +356,19 @@ export default function DomainScannerPage() {
               // Check if element contains the container (avoid hierarchy error)
               if (element.contains(container)) {
                 console.log('Widget element contains container, skipping move')
-                scriptLoadedRef.current = true
+                if (!scriptLoadedRef.current) {
+                  scriptLoadedRef.current = true
+                  container.classList.add('widget-ready')
+                  setWidgetReady(true)
+                }
                 return
               }
               
               // Move widget to container
               container.appendChild(element)
               scriptLoadedRef.current = true
+              container.classList.add('widget-ready')
+              setWidgetReady(true)
               
               // Setup capture after widget is moved
               if (!captureSetup) {
@@ -299,12 +384,18 @@ export default function DomainScannerPage() {
               // Check if widgetInside contains the container (avoid hierarchy error)
               if (widgetInside.contains(container)) {
                 console.log('Widget inside element contains container, skipping move')
-                scriptLoadedRef.current = true
+                if (!scriptLoadedRef.current) {
+                  scriptLoadedRef.current = true
+                  container.classList.add('widget-ready')
+                  setWidgetReady(true)
+                }
                 return
               }
               
               container.appendChild(widgetInside)
               scriptLoadedRef.current = true
+              container.classList.add('widget-ready')
+              setWidgetReady(true)
               
               // Setup capture after widget is moved
               if (!captureSetup) {
@@ -406,22 +497,25 @@ export default function DomainScannerPage() {
         strategy="afterInteractive"
         onLoad={() => {
           // Check immediately without delay
-          checkForWidget()
+          if (checkForWidget()) return
           
           // Check again after a short delay to catch async rendering
           setTimeout(() => {
-            checkForWidget()
+            if (checkForWidget()) return
           }, 100)
           
           // Continue checking periodically but more frequently
           let attempts = 0
-          const maxAttempts = 15
+          const maxAttempts = 20
           const checkInterval = setInterval(() => {
             attempts++
-            checkForWidget()
-            
-            if (scriptLoadedRef.current || attempts >= maxAttempts) {
+            if (checkForWidget() || attempts >= maxAttempts) {
               clearInterval(checkInterval)
+              // Ensure widget is marked as ready even if not found
+              if (attempts >= maxAttempts && containerRef.current) {
+                containerRef.current.classList.add('widget-ready')
+                setWidgetReady(true)
+              }
             }
           }, 200)
         }}
@@ -435,13 +529,49 @@ export default function DomainScannerPage() {
         id="domain-scanner-widget-container"
         data-id="tp_oJdup5"
         ref={containerRef}
-        className="w-full min-h-[600px]"
+        className={`w-full min-h-[600px] ${widgetReady ? 'widget-ready' : ''}`}
         style={{ 
           position: 'relative',
           background: 'transparent',
           padding: '1rem'
         }}
-      />
+      >
+        {!widgetReady && (
+          <div 
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              color: '#ffffff',
+              fontSize: '16px',
+              textAlign: 'center',
+              zIndex: 10
+            }}
+          >
+            <div style={{ marginBottom: '1rem' }}>Cargando...</div>
+            <div 
+              style={{
+                width: '40px',
+                height: '40px',
+                border: '3px solid rgba(255, 255, 255, 0.3)',
+                borderTop: '3px solid #ffffff',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+                margin: '0 auto'
+              }}
+            />
+            <style dangerouslySetInnerHTML={{
+              __html: `
+                @keyframes spin {
+                  0% { transform: rotate(0deg); }
+                  100% { transform: rotate(360deg); }
+                }
+              `
+            }} />
+          </div>
+        )}
+      </div>
     </>
   )
 }

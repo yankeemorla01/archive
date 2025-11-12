@@ -43,27 +43,27 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
       </Dialog.Trigger>
 
       {isOpen && (
-        <Dialog.Portal>
+      <Dialog.Portal>
           <Dialog.Overlay
             className="fixed z-[9999] inset-0 bg-black/50 backdrop-blur-sm"
-            data-overlay="true"
-          />
+          data-overlay="true"
+        />
 
-          <Dialog.Content
-            onInteractOutside={(e) => {
-              if (
-                e.target instanceof HTMLElement &&
-                e.target.dataset.overlay !== "true"
-              ) {
-                e.preventDefault();
-              }
-            }}
+        <Dialog.Content
+          onInteractOutside={(e) => {
+            if (
+              e.target instanceof HTMLElement &&
+              e.target.dataset.overlay !== "true"
+            ) {
+              e.preventDefault();
+            }
+          }}
             className="fixed top-0 left-0 w-full z-[10000] py-28 md:py-40"
             style={{ 
               zIndex: 10000,
               background: '#000000'
             }}
-          >
+        >
           <Dialog.Title className="sr-only">Menu</Dialog.Title>
 
           {/* Botón de cerrar visible en el menú */}
@@ -104,8 +104,8 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
               </a>
             </div>
           </nav>
-          </Dialog.Content>
-        </Dialog.Portal>
+        </Dialog.Content>
+      </Dialog.Portal>
       )}
     </Dialog.Root>
   );

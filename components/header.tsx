@@ -14,7 +14,7 @@ export const Header = () => {
   ];
 
   return (
-    <div className="fixed z-50 top-0 left-0 w-full" style={{ background: '#0E0E0E' }}>
+    <div className="fixed z-[9998] top-0 left-0 w-full" style={{ background: '#0E0E0E' }}>
       <header 
         className="flex items-center"
         style={{ 
@@ -63,8 +63,8 @@ export const Header = () => {
               background: 'transparent'
             }}
             href="https://www.onboardigital.com/"
-          >
-            Get Started
+        >
+          Get Started
           </a>
         </div>
         <MobileMenu />

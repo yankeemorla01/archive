@@ -18,7 +18,15 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Domain Scanner - Scan your website for free",
   description: "Free domain scanner to analyze your website for DMARC, SPF, DKIM and BIMI records",
-  generator: 'v0.app'
+  generator: 'v0.app',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export default function RootLayout({

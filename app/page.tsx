@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import Script from 'next/script'
 import { Header } from '@/components/header'
+import { SEOContent } from '@/components/seo-content'
 
 export default function Home() {
   useEffect(() => {
@@ -582,6 +583,7 @@ export default function Home() {
           />
         </div>
       </div>
+      <SEOContent />
     </>
   );
 }

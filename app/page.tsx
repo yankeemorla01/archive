@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Script from 'next/script'
 import { Header } from '@/components/header'
 import { SEOContent } from '@/components/seo-content'
 
 export default function Home() {
+  const findAndMoveWidgetRef = useRef<(() => boolean) | null>(null)
+
   useEffect(() => {
     // Add styles to make widget match dark theme and be visible
     const style = document.createElement('style')
@@ -86,7 +88,7 @@ export default function Home() {
     }
 
     // Function to find and move widget to container after it loads
-    const findAndMoveWidget = () => {
+    const findAndMoveWidget = (): boolean => {
       const container = document.getElementById('domain-scanner-container')
       if (!container) {
         console.log('Container not found')
@@ -249,6 +251,9 @@ export default function Home() {
       return false
     }
 
+    // Store function in ref so it can be accessed outside useEffect
+    findAndMoveWidgetRef.current = findAndMoveWidget
+
     // Function to capture domain data from widget
     const captureDomainData = async (domain: string) => {
       try {
@@ -281,9 +286,9 @@ export default function Home() {
     }
 
     // Function to setup domain capture listeners
-    const setupDomainCapture = () => {
+    const setupDomainCapture = (): boolean => {
       const container = document.getElementById('domain-scanner-container')
-      if (!container) return
+      if (!container) return false
 
       // Find input field in widget
       const findInput = () => {
@@ -443,7 +448,8 @@ export default function Home() {
     // Setup capture after widget is found
     const setupCaptureInterval = setInterval(() => {
       if (!captureSetup) {
-        captureSetup = setupDomainCapture()
+        const result = setupDomainCapture()
+        captureSetup = result === true
         if (captureSetup) {
           clearInterval(setupCaptureInterval)
         }
@@ -454,7 +460,8 @@ export default function Home() {
     checkInterval = setInterval(() => {
       const found = findAndMoveWidget()
       if (found && !captureSetup) {
-        captureSetup = setupDomainCapture()
+        const result = setupDomainCapture()
+        captureSetup = result === true
       }
       if (found) {
         if (checkInterval) {
@@ -561,12 +568,14 @@ export default function Home() {
         onLoad={() => {
           // Check immediately without delay
           const container = document.getElementById('domain-scanner-container')
-          if (container) {
-            findAndMoveWidget()
+          if (container && findAndMoveWidgetRef.current) {
+            findAndMoveWidgetRef.current()
             
             // Check again after a short delay
             setTimeout(() => {
-              findAndMoveWidget()
+              if (findAndMoveWidgetRef.current) {
+                findAndMoveWidgetRef.current()
+              }
             }, 100)
           }
         }}

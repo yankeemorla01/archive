@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
+import OnboardDigitalFeatures from '@/components/onboard-digital-features'
 
 /**
  * Domain Scanner Page
@@ -572,6 +573,9 @@ export default function DomainScannerPage() {
           </div>
         )}
       </div>
+      
+      {/* OnboardDigital Features Section */}
+      <OnboardDigitalFeatures />
     </>
   )
 }

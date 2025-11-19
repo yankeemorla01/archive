@@ -290,7 +290,7 @@ const GlobalPresenceMap = () => {
   `
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#05070F] py-20 px-4 text-white">
+    <section ref={sectionRef} className="w-full bg-[#05070F] py-12 sm:py-16 lg:py-20 px-4 text-white">
       <style>{customStyles}</style>
       
       <div className="max-w-7xl mx-auto">
@@ -302,7 +302,7 @@ const GlobalPresenceMap = () => {
         </div>
 
         {/* Map Container - Boxed */}
-        <div className="relative w-full h-[420px] bg-[#0f172a] rounded-3xl shadow-2xl border border-slate-800 overflow-hidden">
+        <div className="relative w-full h-[260px] sm:h-[360px] lg:h-[460px] bg-[#0f172a] rounded-3xl shadow-2xl border border-slate-800 overflow-hidden">
           <div ref={mapContainerRef} className="w-full h-full" />
         </div>
       </div>

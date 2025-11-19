@@ -587,22 +587,22 @@ export default function Home() {
         }}
       />
       {/* Hero Title Section - Above Everything */}
-      <div className="relative w-full pt-32 pb-8 px-4">
+      <div className="relative w-full pt-40 sm:pt-44 md:pt-48 pb-6 md:pb-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-3 md:mb-4 tracking-tight leading-tight px-2">
             <span style={{ color: "#FD6262" }}>DMARC</span> Made Simple
           </h1>
-          <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed px-2">
             Your one-stop solution for all things DMARC. Solve email security and deliverability issues in just a few clicks.
           </p>
         </div>
       </div>
 
-      <div className="relative flex flex-col items-center px-4">
+      <div className="relative flex flex-col items-center px-3 sm:px-4">
         {/* Domain Scanner Container */}
-        <div className="relative z-50 w-full max-w-5xl mb-8" style={{ zIndex: 50 }}>
+        <div className="relative z-50 w-full max-w-5xl mb-6 md:mb-8" style={{ zIndex: 50 }}>
           <div 
-            className="w-full min-h-[400px]" 
+            className="w-full min-h-[350px] sm:min-h-[400px]" 
             id="domain-scanner-container"
             style={{ position: 'relative', zIndex: 50 }}
           />

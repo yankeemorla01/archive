@@ -219,18 +219,18 @@ const EmailSecurityFlow = () => {
   };
 
   return (
-    <div ref={containerRef} className="w-full h-[480px] rounded-2xl bg-gray-800/80 border border-gray-700 p-6 text-white flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.4em] text-gray-400 mb-1">EMAIL SECURITY FLOW</p>
-          <h3 className="text-2xl font-semibold text-white">Email Security Process</h3>
-          <p className="text-sm text-gray-300">Compare with and without our service</p>
+    <div ref={containerRef} className="w-full min-h-[480px] md:h-[480px] rounded-2xl bg-gray-800/80 border border-gray-700 p-4 sm:p-6 text-white flex flex-col">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
+        <div className="text-center sm:text-left">
+          <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] sm:tracking-[0.4em] text-gray-400 mb-1">EMAIL SECURITY FLOW</p>
+          <h3 className="text-xl sm:text-2xl font-semibold text-white">Email Security Process</h3>
+          <p className="text-xs sm:text-sm text-gray-300">Compare with and without our service</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3 justify-center sm:justify-start">
           <button
             onClick={() => runWorkflow('with')}
             disabled={isRunning}
-            className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold transition-all duration-200 text-sm ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-semibold transition-all duration-200 text-xs sm:text-sm ${
               isRunning
                 ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                 : selectedButton === 'with'
@@ -243,7 +243,7 @@ const EmailSecurityFlow = () => {
           <button
             onClick={() => runWorkflow('without')}
             disabled={isRunning}
-            className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-medium transition-all duration-200 text-sm ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-2xl font-medium transition-all duration-200 text-xs sm:text-sm ${
               isRunning
                 ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                 : selectedButton === 'without'
@@ -256,8 +256,8 @@ const EmailSecurityFlow = () => {
         </div>
       </div>
 
-      <div className="flex-1 bg-gray-900/60 rounded-2xl border border-gray-600/20 px-6 py-6 overflow-hidden">
-        <div className="relative flex items-center justify-between gap-6 mb-5">
+      <div className="flex-1 bg-gray-900/60 rounded-2xl border border-gray-600/20 px-3 sm:px-6 py-4 sm:py-6 overflow-hidden">
+        <div className="relative flex items-center justify-between gap-2 sm:gap-6 mb-4 sm:mb-5">
           {/* Base line - positioned to connect icon centers */}
           <div className="absolute top-1/2 h-[2px] bg-gray-600/30 -translate-y-1/2" 
                style={{ 
@@ -316,7 +316,7 @@ const EmailSecurityFlow = () => {
             return (
               <div key={`icon-${node.id}`} className="relative flex items-center justify-center z-10 flex-1">
                 <div
-                  className={`w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-500 ease-out ${
+                  className={`w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-500 ease-out ${
                     isGrayedOut
                       ? "bg-gray-800 opacity-30 border border-gray-700"
                       : isFailed
@@ -329,16 +329,16 @@ const EmailSecurityFlow = () => {
                   }`}
                 >
                   {isFailed ? (
-                    <div className="text-white text-3xl font-bold">✕</div>
+                    <div className="text-white text-2xl sm:text-3xl font-bold">✕</div>
                   ) : isCompleted ? (
-                    <CheckCircle className="text-white" size={30} />
+                    <CheckCircle className="text-white" size={20} />
                   ) : (
-                    <Icon className={`${isGrayedOut ? 'text-gray-600' : 'text-white'}`} size={30} />
+                    <Icon className={`${isGrayedOut ? 'text-gray-600' : 'text-white'}`} size={20} />
                   )}
                   {index < emailSecurityNodes.length - 1 && (
                     <span
                       aria-hidden="true"
-                      className={`pointer-events-none absolute top-1/2 left-full w-12 h-[2px] -translate-y-1/2 ${connectorClass}`}
+                      className={`pointer-events-none absolute top-1/2 left-full w-6 sm:w-12 h-[2px] -translate-y-1/2 ${connectorClass}`}
                     />
                   )}
                 </div>
@@ -347,15 +347,15 @@ const EmailSecurityFlow = () => {
           })}
         </div>
 
-        <div className="grid grid-cols-4 gap-6 text-center">
+        <div className="grid grid-cols-4 gap-1 sm:gap-6 text-center">
           {emailSecurityNodes.map((node, index) => {
             const isGrayedOut = flowType === 'without' && (index === 1 || index === 2);
             return (
-              <div key={`text-${node.id}`} className="min-h-[60px] flex flex-col justify-center items-center">
-                <p className={`text-sm font-bold mb-1 leading-tight ${isGrayedOut ? 'text-gray-600' : 'text-white'}`}>
+              <div key={`text-${node.id}`} className="min-h-[50px] sm:min-h-[60px] flex flex-col justify-center items-center px-1">
+                <p className={`text-[10px] sm:text-sm font-bold mb-0.5 sm:mb-1 leading-tight ${isGrayedOut ? 'text-gray-600' : 'text-white'}`}>
                   {flowType === 'without' && index === 3 ? 'Send Attempt' : node.name}
                 </p>
-                <p className={`text-xs leading-tight text-center ${isGrayedOut ? 'text-gray-700' : 'text-gray-300'}`}>
+                <p className={`text-[8px] sm:text-xs leading-tight text-center hidden sm:block ${isGrayedOut ? 'text-gray-700' : 'text-gray-300'}`}>
                   {flowType === 'without' && index === 3 ? 'Basic delivery attempt' : 
                    isGrayedOut ? 'Service not available' : node.description}
                 </p>
@@ -365,11 +365,11 @@ const EmailSecurityFlow = () => {
         </div>
       </div>
 
-      <div className="mt-4 p-4 rounded-2xl border border-gray-600/20 bg-gray-800/30">
-        <h4 className="font-semibold text-sm text-white flex items-center gap-2 mb-1">
-          <Mail size={16} style={{ color: "#FD6262" }} /> Email Security Status
+      <div className="mt-3 sm:mt-4 p-3 sm:p-4 rounded-2xl border border-gray-600/20 bg-gray-800/30">
+        <h4 className="font-semibold text-xs sm:text-sm text-white flex items-center gap-2 mb-1">
+          <Mail size={14} style={{ color: "#FD6262" }} /> Email Security Status
         </h4>
-        <p className="text-xs text-gray-300">
+        <p className="text-[10px] sm:text-xs text-gray-300">
           {!isRunning && completed.length === 0 && !failed && "Click a button to compare email security with and without our service."}
           {isRunning && flowType === 'with' && showLoadingBar && (
             <span>Processing with <span style={{ color: "#FD6262" }}>Onboard Digital</span> security... {Math.round(loadingProgress)}% - {completed.length} steps completed [FAST & SECURE]</span>
@@ -412,21 +412,21 @@ export default function OnboardDigitalFeatures() {
   ]
 
   return (
-    <div className="w-full bg-gray-900 py-24 px-4 mt-12">
+    <div className="w-full bg-gray-900 py-12 sm:py-16 md:py-24 px-4 mt-6 sm:mt-8 md:mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 leading-tight">
             Simplify, Manage, and Automate Your Email Security Journey with <span style={{ color: "#FD6262" }}>Onboard Digital</span>
           </h2>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto">
             Protect your company reputation, ensure compliance with industry regulations, and boost email deliverability 
             with our Email Security and Deliverability platform.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10 md:mb-12">
           {features.map((feature, index) => (
             <FeatureCard
               key={index}
@@ -440,7 +440,7 @@ export default function OnboardDigitalFeatures() {
         {/* CTA Button */}
         <div className="text-center">
           <motion.button 
-            className="bg-[#FD6262] text-black font-semibold px-8 py-3 rounded-lg shadow-lg border border-[#FD6262]"
+            className="bg-[#FD6262] text-black font-semibold px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg shadow-lg border border-[#FD6262] text-sm sm:text-base"
             whileHover={{ 
               scale: 1.05,
               backgroundColor: "#000000",
@@ -461,11 +461,11 @@ export default function OnboardDigitalFeatures() {
       </div>
       
       {/* Key Features Section */}
-      <div className="w-full bg-gray-900 py-24 px-4">
+      <div className="w-full bg-gray-900 py-12 sm:py-16 md:py-24 px-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 leading-tight">
               Key Features for Digital Transformation and Business Growth
             </h2>
             <p className="text-lg text-gray-300 max-w-4xl mx-auto">

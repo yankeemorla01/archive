@@ -544,7 +544,7 @@ export default function OnboardDigitalFeatures() {
               <tbody>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/strengthening-email-ecosystem-outlook%E2%80%99s-new-requirements-for-high%E2%80%90volume-senders/4399730" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Microsoft</a> <span className="text-white">sender requirements</span>
+                    <a href="https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/strengthening-email-ecosystem-outlook%E2%80%99s-new-requirements-for-high%E2%80%90volume-senders/4399730" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Microsoft</a> <span className="text-white">sender requirements</span>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Requirement to set up SPF, DKIM, and DMARC for sending domains
@@ -558,7 +558,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://support.google.com/a/answer/81126?sjid=8821608630663246210&visit_id=638991497519026819-4252877126&rd=1" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Google</a> <span className="text-white"> & </span><a href="https://senders.yahooinc.com/best-practices/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Yahoo</a> <span className="text-white">sender requirements</span>
+                    <a href="https://support.google.com/a/answer/81126?sjid=8821608630663246210&visit_id=638991497519026819-4252877126&rd=1" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Google</a> <span className="text-white"> & </span><a href="https://senders.yahooinc.com/best-practices/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Yahoo</a> <span className="text-white">sender requirements</span>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Requirement to set up SPF, DKIM, and DMARC for sending domains
@@ -572,7 +572,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://gdpr.eu/what-is-gdpr/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>General Data Protection Regulation (GDPR)</a>
+                    <a href="https://gdpr.eu/what-is-gdpr/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>General Data Protection Regulation (GDPR)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Europe's primary data privacy and security law
@@ -586,7 +586,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://www.digital-operational-resilience-act.com/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Digital Operational Resilience Act (DORA)</a>
+                    <a href="https://www.digital-operational-resilience-act.com/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Digital Operational Resilience Act (DORA)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Framework to manage ICT cybersecurity risks
@@ -600,7 +600,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://digital-strategy.ec.europa.eu/en/policies/nis2-directive" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Network and Information Security Directive (NIS 2)</a>
+                    <a href="https://digital-strategy.ec.europa.eu/en/policies/nis2-directive" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Network and Information Security Directive (NIS 2)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Revised EU Directive on ICT cybersecurity risks
@@ -614,7 +614,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://www.pcisecuritystandards.org/standards/pci-dss/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Payment Card Industry Data Security Standard (PCI DSS 4.0)</a>
+                    <a href="https://www.pcisecuritystandards.org/standards/pci-dss/" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>Payment Card Industry Data Security Standard (PCI DSS 4.0)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Technical and operational requirements to protect payment data
@@ -628,7 +628,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://www.oag.ca.gov/privacy/ccpa" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>California Consumer Privacy Act (CCPA)</a>
+                    <a href="https://www.oag.ca.gov/privacy/ccpa" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>California Consumer Privacy Act (CCPA)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Provides privacy rights and consumer protection
@@ -642,7 +642,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr className="border-b border-gray-600">
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>The Gramm-Leach-Bliley Act (GLBA)</a>
+                    <a href="https://www.ftc.gov/business-guidance/privacy-security/gramm-leach-bliley-act" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>The Gramm-Leach-Bliley Act (GLBA)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Safeguards consumers' financial information and requires transparency in how it's shared
@@ -656,7 +656,7 @@ export default function OnboardDigitalFeatures() {
                 </tr>
                 <tr>
                   <td className="px-6 py-4 border-r border-gray-600">
-                    <a href="https://security.cms.gov/learn/health-insurance-portability-and-accountability-act-1996-hipaa" target="_blank" rel="noopener noreferrer" className="font-bold text-lg underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>The Health Insurance Portability and Accountability Act (HIPAA)</a>
+                    <a href="https://security.cms.gov/learn/health-insurance-portability-and-accountability-act-1996-hipaa" target="_blank" rel="noopener noreferrer" className="font-bold text-lg no-underline cursor-pointer hover:opacity-80 transition-opacity" style={{ color: "#FD6262" }}>The Health Insurance Portability and Accountability Act (HIPAA)</a>
                   </td>
                   <td className="px-6 py-4 text-gray-300 border-r border-gray-600">
                     Establishes standards to protect personal health information

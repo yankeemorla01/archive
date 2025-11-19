@@ -588,25 +588,25 @@ export default function Home() {
       <div className="relative w-full pt-32 pb-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-            <span style={{ color: "#FD6262" }}>Email</span> Made Simple
+            <span style={{ color: "#FD6262" }}>DMARC</span> Made Simple
           </h1>
           <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Your one-stop solution for all things <span style={{ color: "#FD6262" }}>OnboardDigital</span>. Scan your domain to see if you need our help with email security and deliverability issues in just a few clicks.
+            Your one-stop solution for all things DMARC. Solve email security and deliverability issues in just a few clicks.
           </p>
         </div>
       </div>
 
-      <div className="relative min-h-screen flex flex-col items-center justify-center py-12 px-4">
+      <div className="relative flex flex-col items-center px-4">
         {/* Domain Scanner Container */}
-        <div className="relative z-50 w-full max-w-5xl" style={{ zIndex: 50 }}>
+        <div className="relative z-50 w-full max-w-5xl mb-8" style={{ zIndex: 50 }}>
           <div 
-            className="w-full min-h-[600px]" 
+            className="w-full min-h-[400px]" 
             id="domain-scanner-container"
             style={{ position: 'relative', zIndex: 50 }}
           />
         </div>
         
-        {/* OnboardDigital Features Section */}
+        {/* OnboardDigital Features Section - Will adapt spacing based on widget height */}
         <OnboardDigitalFeatures />
       </div>
       <SEOContent />

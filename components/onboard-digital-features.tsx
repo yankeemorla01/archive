@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Mail, Eye, Shield, Zap, Play, MessageSquare, Database, Bot, Send, CheckCircle, Cloud, Lock } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -85,6 +85,40 @@ const EmailSecurityFlow = () => {
   const [selectedButton, setSelectedButton] = useState<'with' | 'without' | null>(null);
   const [showLoadingBar, setShowLoadingBar] = useState(false);
   const [currentNodeBeingTouched, setCurrentNodeBeingTouched] = useState<number | null>(null);
+  const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-play animation when component becomes visible
+  useEffect(() => {
+    if (hasAutoPlayed) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAutoPlayed && !isRunning) {
+            setHasAutoPlayed(true);
+            // Auto-play "With Service" animation after a brief delay
+            setTimeout(() => {
+              runWorkflow('with');
+            }, 500);
+          }
+        });
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of component is visible
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, [hasAutoPlayed, isRunning]);
 
   const runWorkflow = async (type: 'with' | 'without') => {
     if (isRunning) return;
@@ -185,7 +219,7 @@ const EmailSecurityFlow = () => {
   };
 
   return (
-    <div className="w-full h-[480px] rounded-2xl bg-gray-800/80 border border-gray-700 p-6 text-white flex flex-col">
+    <div ref={containerRef} className="w-full h-[480px] rounded-2xl bg-gray-800/80 border border-gray-700 p-6 text-white flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-[11px] uppercase tracking-[0.4em] text-gray-400 mb-1">EMAIL SECURITY FLOW</p>
@@ -337,11 +371,15 @@ const EmailSecurityFlow = () => {
         </h4>
         <p className="text-xs text-gray-300">
           {!isRunning && completed.length === 0 && !failed && "Click a button to compare email security with and without our service."}
-          {isRunning && flowType === 'with' && showLoadingBar && `Processing with OnboardDigital security... ${Math.round(loadingProgress)}% - ${completed.length} steps completed [FAST & SECURE]`}
+          {isRunning && flowType === 'with' && showLoadingBar && (
+            <span>Processing with <span style={{ color: "#FD6262" }}>Onboard Digital</span> security... {Math.round(loadingProgress)}% - {completed.length} steps completed [FAST & SECURE]</span>
+          )}
           {isRunning && flowType === 'without' && loadingProgress === 0 && "Message created, attempting to send..."}
           {isRunning && flowType === 'without' && loadingProgress > 0 && loadingProgress < 100 && `Sending message without security... ${Math.round(loadingProgress)}% [SLOW PROCESSING]`}
           {isRunning && flowType === 'without' && loadingProgress === 100 && !failed && "Processing complete, delivery failed..."}
-          {!isRunning && completed.length === emailSecurityNodes.length && flowType === 'with' && "✅ Email delivered securely with OnboardDigital protection!"}
+          {!isRunning && completed.length === emailSecurityNodes.length && flowType === 'with' && (
+            <span>✅ Email delivered securely with <span style={{ color: "#FD6262" }}>Onboard Digital</span> protection!</span>
+          )}
           {!isRunning && failed && flowType === 'without' && "❌ Email delivery failed - security threats detected without protection!"}
         </p>
       </div>
@@ -379,7 +417,7 @@ export default function OnboardDigitalFeatures() {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Simplify, Manage, and Automate Your Email Security Journey with OnboardDigital
+            Simplify, Manage, and Automate Your Email Security Journey with <span style={{ color: "#FD6262" }}>Onboard Digital</span>
           </h2>
           <p className="text-lg text-gray-300 max-w-3xl mx-auto">
             Protect your company reputation, ensure compliance with industry regulations, and boost email deliverability 
@@ -402,12 +440,13 @@ export default function OnboardDigitalFeatures() {
         {/* CTA Button */}
         <div className="text-center">
           <motion.button 
-            className="bg-gray-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg border border-gray-500"
+            className="bg-[#FD6262] text-black font-semibold px-8 py-3 rounded-lg shadow-lg border border-[#FD6262]"
             whileHover={{ 
               scale: 1.05,
-              backgroundColor: "rgb(220, 38, 38)", // red-600
-              borderColor: "rgb(220, 38, 38)",
-              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 20px rgba(220, 38, 38, 0.5)"
+              backgroundColor: "#000000",
+              borderColor: "#ffffff",
+              color: "#ffffff",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 0, 0, 0.3)"
             }}
             whileTap={{ scale: 0.95 }}
             transition={{ 
@@ -479,7 +518,7 @@ export default function OnboardDigitalFeatures() {
             <p className="text-lg text-gray-300 max-w-4xl mx-auto mb-6">
               Email security compliance is mandatory in many industries globally, as protecting company data and consumer privacy 
               becomes increasingly important. Your business needs to become compliant with regulations quickly, 
-              accurately, and without risk, and OnboardDigital makes compliance seamless.
+              accurately, and without risk, and <span style={{ color: "#FD6262" }}>Onboard Digital</span> makes compliance seamless.
             </p>
             <p className="text-base text-gray-200 font-semibold">
               Here are some of the regulations that mandate email security compliance as best practice:
@@ -644,7 +683,7 @@ export default function OnboardDigitalFeatures() {
               Guard Against Financial, Data, and Customer Loss
             </h2>
             <p className="text-lg text-gray-300 max-w-4xl mx-auto">
-              Use OnboardDigital to prevent cybercriminals from sending fraudulent emails to your business partners, employees, 
+              Use <span style={{ color: "#FD6262" }}>Onboard Digital</span> to prevent cybercriminals from sending fraudulent emails to your business partners, employees, 
               and customers from your business email addresses.
             </p>
           </div>

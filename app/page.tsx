@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import Script from 'next/script'
 import { Header } from '@/components/header'
 import { SEOContent } from '@/components/seo-content'
+import OnboardDigitalFeatures from '@/components/onboard-digital-features'
 
 export default function Home() {
   const findAndMoveWidgetRef = useRef<(() => boolean) | null>(null)
@@ -591,6 +592,9 @@ export default function Home() {
             style={{ position: 'relative', zIndex: 50 }}
           />
         </div>
+        
+        {/* OnboardDigital Features Section */}
+        <OnboardDigitalFeatures />
       </div>
       <SEOContent />
     </>

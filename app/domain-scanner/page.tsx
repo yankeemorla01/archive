@@ -574,6 +574,18 @@ export default function DomainScannerPage() {
         )}
       </div>
       
+      {/* Test Section - Should be visible */}
+      <div style={{ 
+        backgroundColor: 'red', 
+        color: 'white', 
+        padding: '20px', 
+        textAlign: 'center',
+        fontSize: '24px',
+        fontWeight: 'bold'
+      }}>
+        TEST: Si ves esto, el componente está funcionando
+      </div>
+      
       {/* OnboardDigital Features Section */}
       <OnboardDigitalFeatures />
     </>

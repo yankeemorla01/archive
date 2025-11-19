@@ -588,7 +588,7 @@ export default function Home() {
       <div className="relative w-full pt-32 pb-8 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
-            <span style={{ color: "#FD6262" }}>OnboardDigital</span> Made Simple
+            <span style={{ color: "#FD6262" }}>Email</span> Made Simple
           </h1>
           <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Your one-stop solution for all things <span style={{ color: "#FD6262" }}>OnboardDigital</span>. Scan your domain to see if you need our help with email security and deliverability issues in just a few clicks.

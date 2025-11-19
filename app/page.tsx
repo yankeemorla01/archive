@@ -5,6 +5,8 @@ import Script from 'next/script'
 import { Header } from '@/components/header'
 import { SEOContent } from '@/components/seo-content'
 import OnboardDigitalFeatures from '@/components/onboard-digital-features'
+import GlobalPresenceMap from '@/components/global-presence-map'
+import LogoTicker from '@/components/logo-ticker'
 
 export default function Home() {
   const findAndMoveWidgetRef = useRef<(() => boolean) | null>(null)
@@ -605,11 +607,16 @@ export default function Home() {
             style={{ position: 'relative', zIndex: 50 }}
           />
         </div>
-        
+      </div>
+
+      <LogoTicker />
+
+      <div className="relative flex flex-col items-center px-4">
         {/* OnboardDigital Features Section - Will adapt spacing based on widget height */}
         <OnboardDigitalFeatures />
       </div>
       <SEOContent />
+      <GlobalPresenceMap />
     </>
   );
 }

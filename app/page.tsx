@@ -584,7 +584,20 @@ export default function Home() {
           console.error('Domain Scanner script error:', e)
         }}
       />
-      <div className="relative min-h-screen flex flex-col items-center justify-center py-12 px-4 pt-24 md:pt-32">
+      {/* Hero Title Section - Above Everything */}
+      <div className="relative w-full pt-32 pb-8 px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+            <span style={{ color: "#FD6262" }}>OnboardDigital</span> Made Simple
+          </h1>
+          <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Your one-stop solution for all things <span style={{ color: "#FD6262" }}>OnboardDigital</span>. Scan your domain to see if you need our help with email security and deliverability issues in just a few clicks.
+          </p>
+        </div>
+      </div>
+
+      <div className="relative min-h-screen flex flex-col items-center justify-center py-12 px-4">
+        {/* Domain Scanner Container */}
         <div className="relative z-50 w-full max-w-5xl" style={{ zIndex: 50 }}>
           <div 
             className="w-full min-h-[600px]" 

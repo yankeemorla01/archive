@@ -8,7 +8,9 @@ const LOGO_POSITION_KEY = 'onboardigital-logo-position'
 
 // Valores por defecto
 const DEFAULT_LOGO_SIZE = 85
-const DEFAULT_LOGO_POSITION = { left: 8, top: 25 }
+const DEFAULT_LOGO_POSITION = { left: 8, top: 6 }
+const POSITION_SHIFT_KEY = 'onboardigital-logo-shifted-v2'
+const POSITION_SHIFT_AMOUNT = 6
 
 // Función para obtener valores iniciales desde localStorage o usar defaults
 const getInitialSize = () => {
@@ -39,9 +41,11 @@ const getInitialPosition = () => {
   return DEFAULT_LOGO_POSITION
 }
 
+type LogoPosition = { left: number; top: number }
+
 export const ResizableLogo = () => {
   const [logoHeight, setLogoHeight] = useState(getInitialSize)
-  const [logoPosition, setLogoPosition] = useState(getInitialPosition)
+  const [logoPosition, setLogoPosition] = useState<LogoPosition>(getInitialPosition)
   const [isResizing, setIsResizing] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
@@ -70,6 +74,20 @@ export const ResizableLogo = () => {
       } catch (e) {
         // Si hay error al parsear, usar posición por defecto
       }
+    }
+
+    // Apply upward shift once to give the logo more breathing room
+    const hasShifted = localStorage.getItem(POSITION_SHIFT_KEY)
+    if (!hasShifted) {
+      setLogoPosition((prev) => {
+        const shifted = {
+          ...prev,
+          top: Math.max(0, prev.top - POSITION_SHIFT_AMOUNT)
+        }
+        localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify(shifted))
+        return shifted
+      })
+      localStorage.setItem(POSITION_SHIFT_KEY, 'true')
     }
   }, [])
 

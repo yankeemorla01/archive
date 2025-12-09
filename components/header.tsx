@@ -164,7 +164,7 @@ export const Header = () => {
 
           <div className="flex justify-between items-center w-full">
 
-            <div className="flex-shrink-0 ml-28">
+            <div className="flex-shrink-0">
 
               <ResizableLogo />
 
@@ -182,7 +182,7 @@ export const Header = () => {
 
           {/* Botón centrado abajo */}
 
-          <div className="flex justify-center w-full mt-16">
+          <div className="flex justify-center w-full mt-6">
 
             <a
 

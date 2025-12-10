@@ -4,6 +4,15 @@ import { ResizableLogo } from "./resizable-logo";
 
 import { MobileMenu } from "./mobile-menu";
 
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+
 
 
 export const Header = () => {
@@ -16,11 +25,7 @@ export const Header = () => {
 
     { name: "Services", href: "https://www.onboardigital.com/services", highlight: false },
 
-    { name: "Cybersecurity", href: "https://www.onboardigital.com/cybersecurity", highlight: true },
-
     { name: "Appointment", href: "https://www.onboardigital.com/appointment", highlight: false },
-
-    { name: "Contact", href: "https://www.onboardigital.com/contact", highlight: false },
 
   ];
 
@@ -84,11 +89,7 @@ export const Header = () => {
 
                 href={item.href}
 
-                className={`transition-colors ease-out duration-150 ${
-
-                  item.highlight ? "" : "text-white hover:text-[#FD6262]"
-
-                }`}
+                className="transition-colors ease-out duration-150 text-white hover:text-[#FD6262]"
 
                 style={{
 
@@ -97,8 +98,6 @@ export const Header = () => {
                   fontWeight: 500,
 
                   marginRight: index < navItems.length - 1 ? "28px" : "0",
-
-                  color: item.highlight ? "#FD6262" : undefined,
 
                 }}
 
@@ -109,6 +108,144 @@ export const Header = () => {
               </a>
 
             ))}
+
+            <NavigationMenu viewport={false} className="!m-0">
+
+              <NavigationMenuList className="gap-0 !m-0">
+
+                <NavigationMenuItem>
+
+                  <NavigationMenuTrigger
+
+                    className="transition-colors ease-out duration-150 text-[#FD6262] hover:text-[#FD6262] bg-transparent hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-[#FD6262] [&>svg]:hidden"
+
+                    style={{
+
+                      fontSize: "17px",
+
+                      fontWeight: 500,
+
+                      marginRight: "28px",
+
+                      color: "#FD6262",
+
+                    }}
+
+                  >
+
+                    Cybersecurity
+
+                  </NavigationMenuTrigger>
+
+                  <NavigationMenuContent
+
+                    className="bg-[#0b0b0b] border border-white/10"
+
+                    style={{ background: "#0b0b0b" }}
+
+                  >
+
+                    <div className="p-2 w-[280px]">
+
+                      <NavigationMenuLink
+
+                        asChild
+
+                        className="block rounded-md transition-colors hover:bg-white/5"
+
+                      >
+
+                        <a
+
+                          href="https://www.onboardigital.com/humanriskmanagment"
+
+                          className="text-white hover:text-[#FD6262]"
+
+                          style={{
+
+                            fontSize: "17px",
+
+                            fontWeight: 500,
+
+                            display: "block",
+
+                            padding: "12px 16px",
+
+                          }}
+
+                        >
+
+                          Human Risk Management
+
+                        </a>
+
+                      </NavigationMenuLink>
+
+                      <NavigationMenuLink
+
+                        asChild
+
+                        className="block rounded-md transition-colors hover:bg-white/5"
+
+                      >
+
+                        <a
+
+                          href="/domain-scanner"
+
+                          className="text-white hover:text-[#FD6262]"
+
+                          style={{
+
+                            fontSize: "17px",
+
+                            fontWeight: 500,
+
+                            display: "block",
+
+                            padding: "12px 16px",
+
+                          }}
+
+                        >
+
+                          DMARC Made Simple
+
+                        </a>
+
+                      </NavigationMenuLink>
+
+                    </div>
+
+                  </NavigationMenuContent>
+
+                </NavigationMenuItem>
+
+              </NavigationMenuList>
+
+            </NavigationMenu>
+
+            <a
+
+              href="https://www.onboardigital.com/contact"
+
+              className="transition-colors ease-out duration-150 text-white hover:text-[#FD6262]"
+
+              style={{
+
+                fontSize: "17px",
+
+                fontWeight: 500,
+
+                marginRight: "28px",
+
+              }}
+
+            >
+
+              Contact
+
+            </a>
 
           </nav>
 

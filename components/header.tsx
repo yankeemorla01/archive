@@ -25,8 +25,6 @@ export const Header = () => {
 
     { name: "Services", href: "https://www.onboardigital.com/services", highlight: false },
 
-    { name: "Appointment", href: "https://www.onboardigital.com/appointment", highlight: false },
-
   ];
 
 
@@ -97,7 +95,7 @@ export const Header = () => {
 
                   fontWeight: 500,
 
-                  marginRight: index < navItems.length - 1 ? "28px" : "0",
+                  marginRight: "28px",
 
                 }}
 
@@ -109,15 +107,15 @@ export const Header = () => {
 
             ))}
 
-            <NavigationMenu viewport={false} className="!m-0">
+            <NavigationMenu viewport={false} className="!p-0">
 
-              <NavigationMenuList className="gap-0 !m-0">
+              <NavigationMenuList className="gap-0 !m-0 !p-0">
 
-                <NavigationMenuItem>
+                <NavigationMenuItem className="!m-0 !p-0">
 
                   <NavigationMenuTrigger
 
-                    className="transition-colors ease-out duration-150 text-[#FD6262] hover:text-[#FD6262] bg-transparent hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-[#FD6262] [&>svg]:hidden"
+                    className="transition-colors ease-out duration-150 text-[#FD6262] hover:text-[#FD6262] bg-transparent hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-[#FD6262] [&>svg]:hidden !p-0"
 
                     style={{
 
@@ -128,6 +126,8 @@ export const Header = () => {
                       marginRight: "28px",
 
                       color: "#FD6262",
+
+                      padding: "0",
 
                     }}
 
@@ -224,6 +224,28 @@ export const Header = () => {
               </NavigationMenuList>
 
             </NavigationMenu>
+
+            <a
+
+              href="https://www.onboardigital.com/appointment"
+
+              className="transition-colors ease-out duration-150 text-white hover:text-[#FD6262]"
+
+              style={{
+
+                fontSize: "17px",
+
+                fontWeight: 500,
+
+                marginRight: "28px",
+
+              }}
+
+            >
+
+              Appointment
+
+            </a>
 
             <a
 

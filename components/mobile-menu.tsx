@@ -19,7 +19,6 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
     { name: "Home", href: "https://www.onboardigital.com/", highlight: false },
     { name: "Vendors", href: "https://www.onboardigital.com/vendors", highlight: false },
     { name: "Services", href: "https://www.onboardigital.com/services", highlight: false },
-    { name: "Appointment", href: "https://www.onboardigital.com/appointment", highlight: false },
   ];
 
   const cybersecuritySubItems = [
@@ -124,6 +123,14 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
                 </div>
               )}
             </div>
+
+            <a
+              href="https://www.onboardigital.com/appointment"
+              onClick={handleLinkClick}
+              className="text-xl font-mono uppercase transition-colors ease-out duration-150 py-2 text-white hover:text-[#FD6262]"
+            >
+              Appointment
+            </a>
 
             <a
               href="https://www.onboardigital.com/contact"

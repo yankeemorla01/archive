@@ -115,7 +115,13 @@ export const Footer = () => {
             {/* Cybersecurity Column */}
             <div>
               <h3 className="text-base font-bold mb-4" style={{ fontSize: '16px', fontWeight: 700 }}>
-                Cybersecurity
+                <a 
+                  href="https://www.onboardigital.com/cybersecurity" 
+                  className="hover:opacity-80 transition-opacity"
+                  style={{ color: '#ffffff', textDecoration: 'none' }}
+                >
+                  Cybersecurity
+                </a>
               </h3>
               <ul className="space-y-2">
                 <li>

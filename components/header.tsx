@@ -115,7 +115,7 @@ export const Header = () => {
 
                   <NavigationMenuTrigger
 
-                    className="transition-colors ease-out duration-150 text-[#FD6262] hover:text-[#FD6262] bg-transparent hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-[#FD6262] [&>svg]:hidden !p-0"
+                    className="transition-colors ease-out duration-150 text-[#FD6262] hover:text-[#FD6262] bg-transparent hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-[#FD6262] [&>svg]:hidden !p-0 cursor-pointer"
 
                     style={{
 
@@ -129,6 +129,11 @@ export const Header = () => {
 
                       padding: "0",
 
+                    }}
+
+                    onClick={(e) => {
+                      // Navegar a la página de cybersecurity
+                      window.location.href = 'https://www.onboardigital.com/cybersecurity';
                     }}
 
                   >

@@ -7,6 +7,7 @@ import { SEOContent } from '@/components/seo-content'
 import OnboardDigitalFeatures from '@/components/onboard-digital-features'
 import GlobalPresenceMap from '@/components/global-presence-map'
 import LogoTicker from '@/components/logo-ticker'
+import { Footer } from '@/components/footer'
 
 export default function Home() {
   const findAndMoveWidgetRef = useRef<(() => boolean) | null>(null)
@@ -617,6 +618,7 @@ export default function Home() {
       </div>
       <SEOContent />
       <GlobalPresenceMap />
+      <Footer />
     </>
   );
 }

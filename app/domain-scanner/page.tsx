@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import OnboardDigitalFeatures from '@/components/onboard-digital-features'
+import { Footer } from '@/components/footer'
 
 /**
  * Domain Scanner Page
@@ -588,6 +589,9 @@ export default function DomainScannerPage() {
       
       {/* OnboardDigital Features Section */}
       <OnboardDigitalFeatures />
+      
+      {/* Footer */}
+      <Footer />
     </>
   )
 }

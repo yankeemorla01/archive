@@ -480,16 +480,59 @@ export default function DomainScannerPage() {
                 });
               } catch(e) {}
               
-              // Intercept fetch calls
+              // Intercept fetch calls to modify headers, referrer, and URL parameters
               const originalFetch = window.fetch;
               window.fetch = function(...args) {
-                const url = args[0];
+                let url = args[0];
+                const options = args[1] || {};
+                
                 if (typeof url === 'string' && url.includes('easydmarc.com')) {
-                  const options = args[1] || {};
+                  // Replace current domain in URL with target domain
+                  const currentHost = window.location.hostname;
+                  if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
+                    url = url.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                    // Also replace in URL parameters
+                    url = url.replace(/referrer=([^&]*)/gi, (match, referrerValue) => {
+                      try {
+                        const decoded = decodeURIComponent(referrerValue);
+                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        return 'referrer=' + encodeURIComponent(fixed);
+                      } catch(e) {
+                        return 'referrer=' + encodeURIComponent(targetOrigin);
+                      }
+                    });
+                    url = url.replace(/domain=([^&]*)/gi, (match, domainValue) => {
+                      try {
+                        const decoded = decodeURIComponent(domainValue);
+                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        return 'domain=' + encodeURIComponent(fixed);
+                      } catch(e) {
+                        return 'domain=' + encodeURIComponent(targetDomain);
+                      }
+                    });
+                  }
+                  
                   const headers = new Headers(options.headers || {});
                   headers.set('Referer', targetOrigin);
                   headers.set('Origin', targetOrigin);
                   headers.set('Referrer', targetOrigin);
+                  
+                  // Modify body if it's a string containing the domain
+                  let body = options.body;
+                  if (body && typeof body === 'string') {
+                    try {
+                      const bodyObj = JSON.parse(body);
+                      if (bodyObj.domain || bodyObj.referrer || bodyObj.origin) {
+                        if (bodyObj.domain) bodyObj.domain = bodyObj.domain.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        if (bodyObj.referrer) bodyObj.referrer = bodyObj.referrer.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        if (bodyObj.origin) bodyObj.origin = targetOrigin;
+                        body = JSON.stringify(bodyObj);
+                      }
+                    } catch(e) {
+                      // If not JSON, try string replacement
+                      body = body.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                    }
+                  }
                   
                   if (options.referrerPolicy) {
                     options.referrerPolicy = 'origin';
@@ -497,26 +540,95 @@ export default function DomainScannerPage() {
                   
                   return originalFetch.apply(this, [
                     url,
-                    { ...options, headers: headers, referrer: targetOrigin }
+                    { ...options, headers: headers, referrer: targetOrigin, body: body }
                   ]);
                 }
                 return originalFetch.apply(this, args);
               };
               
-              // Intercept XMLHttpRequest
+              // Intercept XMLHttpRequest to modify headers, URL, and body
               const originalXHROpen = XMLHttpRequest.prototype.open;
               const originalXHRSend = XMLHttpRequest.prototype.send;
+              const originalXHRSETRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
               
               XMLHttpRequest.prototype.open = function(method, url, ...rest) {
                 this._easydmarcUrl = url;
+                this._easydmarcMethod = method;
+                
+                // Modify URL if it contains easydmarc.com
+                if (typeof url === 'string' && url.includes('easydmarc.com')) {
+                  const currentHost = window.location.hostname;
+                  if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
+                    let modifiedUrl = url.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                    // Replace in URL parameters
+                    modifiedUrl = modifiedUrl.replace(/referrer=([^&]*)/gi, (match, referrerValue) => {
+                      try {
+                        const decoded = decodeURIComponent(referrerValue);
+                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        return 'referrer=' + encodeURIComponent(fixed);
+                      } catch(e) {
+                        return 'referrer=' + encodeURIComponent(targetOrigin);
+                      }
+                    });
+                    modifiedUrl = modifiedUrl.replace(/domain=([^&]*)/gi, (match, domainValue) => {
+                      try {
+                        const decoded = decodeURIComponent(domainValue);
+                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        return 'domain=' + encodeURIComponent(fixed);
+                      } catch(e) {
+                        return 'domain=' + encodeURIComponent(targetDomain);
+                      }
+                    });
+                    url = modifiedUrl;
+                    this._easydmarcUrl = url;
+                  }
+                }
+                
                 return originalXHROpen.apply(this, [method, url, ...rest]);
+              };
+              
+              XMLHttpRequest.prototype.setRequestHeader = function(name, value) {
+                if (this._easydmarcUrl && typeof this._easydmarcUrl === 'string' && this._easydmarcUrl.includes('easydmarc.com')) {
+                  const currentHost = window.location.hostname;
+                  // Replace domain in header values
+                  if (typeof value === 'string') {
+                    value = value.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                  }
+                  // Override referrer-related headers
+                  if (name.toLowerCase() === 'referer' || name.toLowerCase() === 'referrer') {
+                    value = targetOrigin;
+                  }
+                  if (name.toLowerCase() === 'origin') {
+                    value = targetOrigin;
+                  }
+                }
+                return originalXHRSETRequestHeader.apply(this, [name, value]);
               };
               
               XMLHttpRequest.prototype.send = function(...args) {
                 if (this._easydmarcUrl && typeof this._easydmarcUrl === 'string' && this._easydmarcUrl.includes('easydmarc.com')) {
+                  const currentHost = window.location.hostname;
+                  
+                  // Set headers
                   this.setRequestHeader('Referer', targetOrigin);
                   this.setRequestHeader('Origin', targetOrigin);
                   this.setRequestHeader('Referrer', targetOrigin);
+                  
+                  // Modify body if present
+                  if (args[0] && typeof args[0] === 'string') {
+                    try {
+                      const bodyObj = JSON.parse(args[0]);
+                      if (bodyObj.domain || bodyObj.referrer || bodyObj.origin) {
+                        if (bodyObj.domain) bodyObj.domain = bodyObj.domain.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        if (bodyObj.referrer) bodyObj.referrer = bodyObj.referrer.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                        if (bodyObj.origin) bodyObj.origin = targetOrigin;
+                        args[0] = JSON.stringify(bodyObj);
+                      }
+                    } catch(e) {
+                      // If not JSON, try string replacement
+                      args[0] = args[0].replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
+                    }
+                  }
                 }
                 return originalXHRSend.apply(this, args);
               };

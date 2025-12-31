@@ -39,17 +39,6 @@ export default function Home() {
       #domain-scanner-container {
         z-index: 50 !important;
         position: relative !important;
-        background: transparent !important;
-        min-height: 350px !important;
-      }
-      
-      /* Ensure container doesn't show black background */
-      #domain-scanner-container:empty::before {
-        content: '';
-        display: block;
-        width: 100%;
-        min-height: 350px;
-        background: transparent;
       }
       
       /* Make widget text visible on dark background */
@@ -106,15 +95,9 @@ export default function Home() {
     const findAndMoveWidget = (): boolean => {
       const container = document.getElementById('domain-scanner-container')
       if (!container) {
-        console.warn('Container not found')
+        console.log('Container not found')
         return false
       }
-      
-      // Log container state
-      console.log('Container state:', {
-        hasChildren: container.children.length > 0,
-        innerHTML: container.innerHTML.substring(0, 100)
-      })
 
       // Skip script tags - we want the actual widget element
       const widgetSelectors = [
@@ -144,27 +127,19 @@ export default function Home() {
           if (widget.tagName === 'IFRAME') {
             const iframe = widget as HTMLIFrameElement
             const src = iframe.src
-            if (src && src.includes('referrer=') && src.includes('easydmarc.com')) {
-              const currentHost = window.location.hostname
-              const targetDomain = 'onboardigital.com'
-              
-              if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
-                const modifiedSrc = src.replace(
-                  /referrer=([^&]*)/,
-                  (match, referrerValue) => {
-                    try {
-                      const decoded = decodeURIComponent(referrerValue)
-                      const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain)
-                      return 'referrer=' + encodeURIComponent(fixed)
-                    } catch (e) {
-                      return 'referrer=' + encodeURIComponent('https://' + targetDomain)
-                    }
-                  }
-                )
-                if (modifiedSrc !== src) {
-                  iframe.src = modifiedSrc
-                  console.log('Modified iframe referrer:', currentHost, '->', targetDomain)
+            if (src && src.includes('referrer=')) {
+              // Replace scan.onboardigital.com with onboardigital.com in referrer
+              const modifiedSrc = src.replace(
+                /referrer=([^&]*)/,
+                (match, referrerValue) => {
+                  const decoded = decodeURIComponent(referrerValue)
+                  const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
+                  return 'referrer=' + encodeURIComponent(fixed)
                 }
+              )
+              if (modifiedSrc !== src) {
+                iframe.src = modifiedSrc
+                console.log('Modified iframe referrer')
               }
             }
           }
@@ -193,7 +168,6 @@ export default function Home() {
       }
 
       // Look for divs that might be the widget (check for common widget patterns)
-      let widgetFoundInDivs = false
       allDivs.forEach((div, index) => {
         // Skip if it's our container or already in it
         if (div.id === 'domain-scanner-container' || div.closest('#domain-scanner-container')) {
@@ -230,15 +204,10 @@ export default function Home() {
           if (div.parentElement !== container) {
             container.appendChild(div)
             console.log('Widget moved to container')
-            widgetFoundInDivs = true
             return true
           }
         }
       })
-      
-      if (widgetFoundInDivs) {
-        return true
-      }
 
       // Check for any iframe that might contain the widget
       const iframes = document.querySelectorAll('iframe')
@@ -248,27 +217,18 @@ export default function Home() {
           
           // Modify referrer in iframe URL
           const src = iframe.src
-          if (src && src.includes('referrer=') && src.includes('easydmarc.com')) {
-            const currentHost = window.location.hostname
-            const targetDomain = 'onboardigital.com'
-            
-            if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
-              const modifiedSrc = src.replace(
-                /referrer=([^&]*)/,
-                (match, referrerValue) => {
-                  try {
-                    const decoded = decodeURIComponent(referrerValue)
-                    const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain)
-                    return 'referrer=' + encodeURIComponent(fixed)
-                  } catch (e) {
-                    return 'referrer=' + encodeURIComponent('https://' + targetDomain)
-                  }
-                }
-              )
-              if (modifiedSrc !== src) {
-                iframe.src = modifiedSrc
-                console.log('Modified iframe referrer in iframe search:', currentHost, '->', targetDomain)
+          if (src && src.includes('referrer=')) {
+            const modifiedSrc = src.replace(
+              /referrer=([^&]*)/,
+              (match, referrerValue) => {
+                const decoded = decodeURIComponent(referrerValue)
+                const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
+                return 'referrer=' + encodeURIComponent(fixed)
               }
+            )
+            if (modifiedSrc !== src) {
+              iframe.src = modifiedSrc
+              console.log('Modified iframe referrer in iframe search')
             }
           }
           
@@ -437,33 +397,21 @@ export default function Home() {
       return inputFound || buttonFound
     }
 
-    // Function to fix iframe referrer - replace any domain with onboardigital.com
+    // Function to fix iframe referrer
     const fixIframeReferrer = (iframe: HTMLIFrameElement) => {
       const src = iframe.src
-      if (src && src.includes('referrer=') && src.includes('easydmarc.com')) {
-        const currentHost = window.location.hostname
-        const targetDomain = 'onboardigital.com'
-        
-        // Only fix if current domain is not the target domain
-        if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
-          const modifiedSrc = src.replace(
-            /referrer=([^&]*)/,
-            (match, referrerValue) => {
-              try {
-                const decoded = decodeURIComponent(referrerValue)
-                // Replace any occurrence of current host with target domain
-                const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain)
-                return 'referrer=' + encodeURIComponent(fixed)
-              } catch (e) {
-                // If decoding fails, just replace the hostname in the URL
-                return 'referrer=' + encodeURIComponent('https://' + targetDomain)
-              }
-            }
-          )
-          if (modifiedSrc !== src) {
-            iframe.src = modifiedSrc
-            console.log('Fixed iframe referrer via observer:', currentHost, '->', targetDomain)
+      if (src && src.includes('referrer=') && src.includes('scan.onboardigital.com')) {
+        const modifiedSrc = src.replace(
+          /referrer=([^&]*)/,
+          (match, referrerValue) => {
+            const decoded = decodeURIComponent(referrerValue)
+            const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
+            return 'referrer=' + encodeURIComponent(fixed)
           }
+        )
+        if (modifiedSrc !== src) {
+          iframe.src = modifiedSrc
+          console.log('Fixed iframe referrer via observer')
         }
       }
     }
@@ -497,16 +445,9 @@ export default function Home() {
     // Start checking immediately and more frequently
     let checkInterval: NodeJS.Timeout | null = null
     let captureSetup = false
-    let widgetFound = false
     
     // Check immediately
-    const initialCheck = findAndMoveWidget()
-    if (initialCheck) {
-      widgetFound = true
-      console.log('Widget found on initial check')
-    } else {
-      console.log('Widget not found on initial check, will keep searching...')
-    }
+    findAndMoveWidget()
     
     // Setup capture after widget is found
     const setupCaptureInterval = setInterval(() => {
@@ -522,41 +463,26 @@ export default function Home() {
     // Then check periodically with shorter intervals
     checkInterval = setInterval(() => {
       const found = findAndMoveWidget()
-      if (found && !widgetFound) {
-        widgetFound = true
-        console.log('Widget found during periodic check')
-      }
       if (found && !captureSetup) {
         const result = setupDomainCapture()
         captureSetup = result === true
-        if (captureSetup) {
-          console.log('Domain capture setup completed')
-        }
       }
-      if (found && widgetFound && captureSetup) {
+      if (found) {
         if (checkInterval) {
           clearInterval(checkInterval)
           checkInterval = null
-          console.log('Widget fully loaded and configured, stopping checks')
         }
       }
     }, 200)
 
-    // Stop checking after 10 seconds
+    // Stop checking after 6 seconds (reduced from 10)
     setTimeout(() => {
       if (checkInterval) {
         clearInterval(checkInterval)
         checkInterval = null
-        if (!widgetFound) {
-          console.warn('Widget not found after 10 seconds. Check console for errors.')
-          const container = document.getElementById('domain-scanner-container')
-          if (container && container.children.length === 0) {
-            container.innerHTML = '<div style="color: #ffffff; padding: 20px; text-align: center; background: rgba(255,255,255,0.1); border-radius: 8px;"><p>Widget is loading... If this persists, please refresh the page.</p></div>'
-          }
-        }
       }
       clearInterval(setupCaptureInterval)
-    }, 10000)
+    }, 6000)
 
     return () => {
       if (checkInterval) {
@@ -580,12 +506,11 @@ export default function Home() {
             (function() {
               'use strict';
               // Override domain validation for EasyDMARC widget
-              // This allows the widget to work on any subdomain by redirecting to onboardigital.com
+              // This allows the widget to work on scan.onboardigital.com
               
               const targetDomain = 'onboardigital.com';
-              const targetOrigin = 'https://' + targetDomain;
               
-              // Method 1: Override hostname directly if possible
+              // Method 1: Override hostname directly if possible (silent)
               try {
                 const originalLocation = window.location;
                 Object.defineProperty(originalLocation, 'hostname', {
@@ -593,16 +518,11 @@ export default function Home() {
                   configurable: true,
                   enumerable: true
                 });
-                Object.defineProperty(originalLocation, 'origin', {
-                  get: function() { return targetOrigin; },
-                  configurable: true,
-                  enumerable: true
-                });
               } catch(e) {
                 // Silently fail - browser may protect this property
               }
               
-              // Method 2: Override document.domain
+              // Method 2: Override document.domain (silent)
               try {
                 Object.defineProperty(document, 'domain', {
                   get: function() { return targetDomain; },
@@ -612,169 +532,33 @@ export default function Home() {
                 // Silently fail
               }
               
-              // Method 3: Intercept fetch calls to modify headers, referrer, and URL parameters
+              // Method 3: Intercept fetch/XHR calls to modify headers
               const originalFetch = window.fetch;
               window.fetch = function(...args) {
-                let url = args[0];
-                const options = args[1] || {};
-                
+                const url = args[0];
                 if (typeof url === 'string' && url.includes('easydmarc.com')) {
-                  // Replace current domain in URL with target domain
-                  const currentHost = window.location.hostname;
-                  if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
-                    url = url.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                    // Also replace in URL parameters
-                    url = url.replace(/referrer=([^&]*)/gi, (match, referrerValue) => {
-                      try {
-                        const decoded = decodeURIComponent(referrerValue);
-                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        return 'referrer=' + encodeURIComponent(fixed);
-                      } catch(e) {
-                        return 'referrer=' + encodeURIComponent(targetOrigin);
-                      }
-                    });
-                    url = url.replace(/domain=([^&]*)/gi, (match, domainValue) => {
-                      try {
-                        const decoded = decodeURIComponent(domainValue);
-                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        return 'domain=' + encodeURIComponent(fixed);
-                      } catch(e) {
-                        return 'domain=' + encodeURIComponent(targetDomain);
-                      }
-                    });
-                  }
-                  
+                  // Modify headers to include correct domain
+                  const options = args[1] || {};
                   const headers = new Headers(options.headers || {});
-                  headers.set('Referer', targetOrigin);
-                  headers.set('Origin', targetOrigin);
-                  headers.set('Referrer', targetOrigin);
-                  
-                  // Modify body if it's a string containing the domain
-                  let body = options.body;
-                  if (body && typeof body === 'string') {
-                    try {
-                      const bodyObj = JSON.parse(body);
-                      if (bodyObj.domain || bodyObj.referrer || bodyObj.origin) {
-                        if (bodyObj.domain) bodyObj.domain = bodyObj.domain.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        if (bodyObj.referrer) bodyObj.referrer = bodyObj.referrer.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        if (bodyObj.origin) bodyObj.origin = targetOrigin;
-                        body = JSON.stringify(bodyObj);
-                      }
-                    } catch(e) {
-                      // If not JSON, try string replacement
-                      body = body.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                    }
-                  }
-                  
-                  // Also modify referrerPolicy if present
-                  if (options.referrerPolicy) {
-                    options.referrerPolicy = 'origin';
-                  }
+                  headers.set('Referer', 'https://' + targetDomain);
+                  headers.set('Origin', 'https://' + targetDomain);
                   
                   return originalFetch.apply(this, [
                     url,
-                    { ...options, headers: headers, referrer: targetOrigin, body: body }
+                    { ...options, headers: headers }
                   ]);
                 }
                 return originalFetch.apply(this, args);
               };
               
-              // Method 4: Intercept XMLHttpRequest to modify headers, URL, and body
+              // Method 4: Intercept XMLHttpRequest if used
               const originalXHROpen = XMLHttpRequest.prototype.open;
-              const originalXHRSend = XMLHttpRequest.prototype.send;
-              const originalXHRSETRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
-              
               XMLHttpRequest.prototype.open = function(method, url, ...rest) {
-                this._easydmarcUrl = url;
-                this._easydmarcMethod = method;
-                
-                // Modify URL if it contains easydmarc.com
                 if (typeof url === 'string' && url.includes('easydmarc.com')) {
-                  const currentHost = window.location.hostname;
-                  if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
-                    let modifiedUrl = url.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                    // Replace in URL parameters
-                    modifiedUrl = modifiedUrl.replace(/referrer=([^&]*)/gi, (match, referrerValue) => {
-                      try {
-                        const decoded = decodeURIComponent(referrerValue);
-                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        return 'referrer=' + encodeURIComponent(fixed);
-                      } catch(e) {
-                        return 'referrer=' + encodeURIComponent(targetOrigin);
-                      }
-                    });
-                    modifiedUrl = modifiedUrl.replace(/domain=([^&]*)/gi, (match, domainValue) => {
-                      try {
-                        const decoded = decodeURIComponent(domainValue);
-                        const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        return 'domain=' + encodeURIComponent(fixed);
-                      } catch(e) {
-                        return 'domain=' + encodeURIComponent(targetDomain);
-                      }
-                    });
-                    url = modifiedUrl;
-                    this._easydmarcUrl = url;
-                  }
+                  // Modify URL or headers if needed
                 }
-                
                 return originalXHROpen.apply(this, [method, url, ...rest]);
               };
-              
-              XMLHttpRequest.prototype.setRequestHeader = function(name, value) {
-                if (this._easydmarcUrl && typeof this._easydmarcUrl === 'string' && this._easydmarcUrl.includes('easydmarc.com')) {
-                  const currentHost = window.location.hostname;
-                  // Replace domain in header values
-                  if (typeof value === 'string') {
-                    value = value.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                  }
-                  // Override referrer-related headers
-                  if (name.toLowerCase() === 'referer' || name.toLowerCase() === 'referrer') {
-                    value = targetOrigin;
-                  }
-                  if (name.toLowerCase() === 'origin') {
-                    value = targetOrigin;
-                  }
-                }
-                return originalXHRSETRequestHeader.apply(this, [name, value]);
-              };
-              
-              XMLHttpRequest.prototype.send = function(...args) {
-                if (this._easydmarcUrl && typeof this._easydmarcUrl === 'string' && this._easydmarcUrl.includes('easydmarc.com')) {
-                  const currentHost = window.location.hostname;
-                  
-                  // Set headers
-                  this.setRequestHeader('Referer', targetOrigin);
-                  this.setRequestHeader('Origin', targetOrigin);
-                  this.setRequestHeader('Referrer', targetOrigin);
-                  
-                  // Modify body if present
-                  if (args[0] && typeof args[0] === 'string') {
-                    try {
-                      const bodyObj = JSON.parse(args[0]);
-                      if (bodyObj.domain || bodyObj.referrer || bodyObj.origin) {
-                        if (bodyObj.domain) bodyObj.domain = bodyObj.domain.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        if (bodyObj.referrer) bodyObj.referrer = bodyObj.referrer.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                        if (bodyObj.origin) bodyObj.origin = targetOrigin;
-                        args[0] = JSON.stringify(bodyObj);
-                      }
-                    } catch(e) {
-                      // If not JSON, try string replacement
-                      args[0] = args[0].replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain);
-                    }
-                  }
-                }
-                return originalXHRSend.apply(this, args);
-              };
-              
-              // Method 5: Override document.referrer if possible
-              try {
-                Object.defineProperty(document, 'referrer', {
-                  get: function() { return targetOrigin; },
-                  configurable: true
-                });
-              } catch(e) {
-                // Silently fail
-              }
             })();
           `,
         }}
@@ -786,33 +570,21 @@ export default function Home() {
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="afterInteractive"
         onLoad={() => {
-          console.log('EasyDMARC script loaded successfully')
           // Check immediately without delay
           const container = document.getElementById('domain-scanner-container')
-          if (container) {
-            console.log('Container found, searching for widget...')
-            if (findAndMoveWidgetRef.current) {
-              const found = findAndMoveWidgetRef.current()
-              console.log('Widget search result:', found)
-            }
+          if (container && findAndMoveWidgetRef.current) {
+            findAndMoveWidgetRef.current()
             
             // Check again after a short delay
             setTimeout(() => {
               if (findAndMoveWidgetRef.current) {
-                const found = findAndMoveWidgetRef.current()
-                console.log('Widget search result (delayed):', found)
+                findAndMoveWidgetRef.current()
               }
             }, 100)
-          } else {
-            console.error('Container not found!')
           }
         }}
         onError={(e) => {
           console.error('Domain Scanner script error:', e)
-          const container = document.getElementById('domain-scanner-container')
-          if (container) {
-            container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Error loading scanner. Please refresh the page.</div>'
-          }
         }}
       />
       {/* Hero Title Section - Above Everything */}
@@ -833,12 +605,7 @@ export default function Home() {
           <div 
             className="w-full min-h-[350px] sm:min-h-[400px]" 
             id="domain-scanner-container"
-            style={{ 
-              position: 'relative', 
-              zIndex: 50,
-              background: 'transparent',
-              minHeight: '350px'
-            }}
+            style={{ position: 'relative', zIndex: 50 }}
           />
         </div>
       </div>

@@ -696,10 +696,35 @@ export default function Home() {
           }
         }}
         onError={(e) => {
-          console.error('Domain Scanner script error:', e)
+          console.error('Domain Scanner script error (direct load failed):', e)
+          console.log('Attempting to load via proxy...')
+          
+          // Try loading via proxy as fallback
           const container = document.getElementById('domain-scanner-container')
           if (container) {
-            container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Error loading scanner. Please refresh the page.</div>'
+            // Show loading message
+            container.innerHTML = '<div style="color: #ffffff; padding: 20px; text-align: center; background: rgba(255,255,255,0.1); border-radius: 8px;"><p>Loading scanner via alternative method...</p></div>'
+            
+            // Try to load script via proxy
+            const script = document.createElement('script')
+            script.id = 'easydmarc-domain-scanner-proxy'
+            script.setAttribute('data-id', 'tp_oJdup5')
+            script.setAttribute('data-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX29KZHVwNSIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjRkQ2MjYxIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiQW5hbHl6ZSBZb3VyIERvbWFpbuKAmXMgU2VjdXJpdHkiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBEb21haW4iLCJidXR0b25fMiI6IkluY3JlYXNlIFlvdXIgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjp0cnVlfX0sImlhdCI6MTc2MzU3NDQ5OX0.dKqkY-pDmXS20QkHpWbJw_7zPF3mHGFOu_-OQg4Jjr0')
+            script.src = '/api/easydmarc-proxy'
+            script.onload = () => {
+              console.log('EasyDMARC script loaded via proxy successfully')
+              container.innerHTML = '' // Clear loading message
+              if (findAndMoveWidgetRef.current) {
+                setTimeout(() => {
+                  findAndMoveWidgetRef.current?.()
+                }, 500)
+              }
+            }
+            script.onerror = (error) => {
+              console.error('Failed to load script via proxy as well:', error)
+              container.innerHTML = '<div style="color: #ffffff; padding: 20px; text-align: center; background: rgba(255,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,0,0,0.5);"><p style="margin-bottom: 10px;"><strong>Unable to load domain scanner</strong></p><p style="font-size: 14px; opacity: 0.9; margin-bottom: 10px;">The scanner script is being blocked. Please:</p><ul style="text-align: left; display: inline-block; margin-top: 10px; font-size: 14px; list-style: disc; padding-left: 20px;"><li>Disable ad blockers (uBlock Origin, AdBlock Plus, etc.)</li><li>Check browser security extensions</li><li>Try refreshing the page</li><li>Try in an incognito/private window</li></ul><p style="font-size: 12px; opacity: 0.7; margin-top: 15px;">Error: ERR_BLOCKED_BY_CLIENT</p></div>'
+            }
+            document.head.appendChild(script)
           }
         }}
       />

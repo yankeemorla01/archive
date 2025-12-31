@@ -494,40 +494,6 @@ export default function Home() {
       subtree: true
     })
 
-    // Function to remove domain validation errors from widget
-    const removeDomainErrors = () => {
-      // Find and hide domain mismatch error messages
-      const allElements = document.querySelectorAll('*')
-      allElements.forEach((el) => {
-        const text = el.textContent || ''
-        if (text.includes('domain') && text.includes('match') && text.includes("doesn't")) {
-          // Hide the error element
-          ;(el as HTMLElement).style.display = 'none'
-          // Also hide parent if it contains the error
-          let parent = el.parentElement
-          while (parent && parent !== document.body) {
-            const parentText = parent.textContent || ''
-            if (parentText.includes('domain') && parentText.includes('match')) {
-              ;(parent as HTMLElement).style.display = 'none'
-            }
-            parent = parent.parentElement
-          }
-        }
-      })
-      
-      // Re-enable disabled scan buttons
-      const buttons = document.querySelectorAll('button')
-      buttons.forEach((button) => {
-        const buttonText = button.textContent?.toLowerCase() || ''
-        if (buttonText.includes('scan') && button.disabled) {
-          button.disabled = false
-          ;(button as HTMLElement).style.opacity = '1'
-          ;(button as HTMLElement).style.cursor = 'pointer'
-          ;(button as HTMLElement).style.pointerEvents = 'auto'
-        }
-      })
-    }
-    
     // Start checking immediately and more frequently
     let checkInterval: NodeJS.Timeout | null = null
     let captureSetup = false
@@ -538,8 +504,6 @@ export default function Home() {
     if (initialCheck) {
       widgetFound = true
       console.log('Widget found on initial check')
-      // Remove domain errors immediately
-      setTimeout(removeDomainErrors, 500)
     } else {
       console.log('Widget not found on initial check, will keep searching...')
     }
@@ -561,8 +525,6 @@ export default function Home() {
       if (found && !widgetFound) {
         widgetFound = true
         console.log('Widget found during periodic check')
-        // Remove domain errors when widget is found
-        setTimeout(removeDomainErrors, 500)
       }
       if (found && !captureSetup) {
         const result = setupDomainCapture()
@@ -571,9 +533,6 @@ export default function Home() {
           console.log('Domain capture setup completed')
         }
       }
-      // Always try to remove domain errors
-      removeDomainErrors()
-      
       if (found && widgetFound && captureSetup) {
         if (checkInterval) {
           clearInterval(checkInterval)
@@ -582,21 +541,6 @@ export default function Home() {
         }
       }
     }, 200)
-    
-    // Also set up a MutationObserver to catch domain errors as they appear
-    const errorObserver = new MutationObserver(() => {
-      removeDomainErrors()
-    })
-    
-    errorObserver.observe(document.body, {
-      childList: true,
-      subtree: true
-    })
-    
-    // Clean up observer
-    setTimeout(() => {
-      errorObserver.disconnect()
-    }, 30000) // Stop after 30 seconds
 
     // Stop checking after 10 seconds
     setTimeout(() => {
@@ -640,64 +584,35 @@ export default function Home() {
               
               const targetDomain = 'onboardigital.com';
               const targetOrigin = 'https://' + targetDomain;
-              const currentHost = window.location.hostname;
               
-              // Method 1: Override window.location properties more aggressively
+              // Method 1: Override hostname directly if possible
               try {
-                const locationProps = ['hostname', 'host', 'origin', 'href'];
-                locationProps.forEach(prop => {
-                  try {
-                    if (prop === 'hostname') {
-                      Object.defineProperty(window.location, prop, {
-                        get: function() { return targetDomain; },
-                        configurable: true,
-                        enumerable: true
-                      });
-                    } else if (prop === 'host') {
-                      Object.defineProperty(window.location, prop, {
-                        get: function() { return targetDomain + (window.location.port ? ':' + window.location.port : ''); },
-                        configurable: true,
-                        enumerable: true
-                      });
-                    } else if (prop === 'origin') {
-                      Object.defineProperty(window.location, prop, {
-                        get: function() { return targetOrigin; },
-                        configurable: true,
-                        enumerable: true
-                      });
-                    } else if (prop === 'href') {
-                      Object.defineProperty(window.location, prop, {
-                        get: function() { 
-                          const path = window.location.pathname + window.location.search + window.location.hash;
-                          return targetOrigin + path;
-                        },
-                        configurable: true,
-                        enumerable: true
-                      });
-                    }
-                  } catch(e) {
-                    console.warn('Could not override location.' + prop, e);
-                  }
+                const originalLocation = window.location;
+                Object.defineProperty(originalLocation, 'hostname', {
+                  get: function() { return targetDomain; },
+                  configurable: true,
+                  enumerable: true
+                });
+                Object.defineProperty(originalLocation, 'origin', {
+                  get: function() { return targetOrigin; },
+                  configurable: true,
+                  enumerable: true
                 });
               } catch(e) {
-                console.warn('Could not override location properties', e);
+                // Silently fail - browser may protect this property
               }
               
-              // Method 2: Override document.domain and document.location
+              // Method 2: Override document.domain
               try {
                 Object.defineProperty(document, 'domain', {
                   get: function() { return targetDomain; },
                   configurable: true
                 });
-                Object.defineProperty(document, 'location', {
-                  get: function() { return window.location; },
-                  configurable: true
-                });
               } catch(e) {
-                console.warn('Could not override document properties', e);
+                // Silently fail
               }
               
-              // Method 3: Intercept fetch calls to modify headers, referrer, and responses
+              // Method 3: Intercept fetch calls to modify headers and referrer
               const originalFetch = window.fetch;
               window.fetch = function(...args) {
                 const url = args[0];
@@ -708,6 +623,7 @@ export default function Home() {
                   headers.set('Origin', targetOrigin);
                   headers.set('Referrer', targetOrigin);
                   
+                  // Also modify referrerPolicy if present
                   if (options.referrerPolicy) {
                     options.referrerPolicy = 'origin';
                   }
@@ -715,48 +631,17 @@ export default function Home() {
                   return originalFetch.apply(this, [
                     url,
                     { ...options, headers: headers, referrer: targetOrigin }
-                  ]).then(response => {
-                    // Intercept JSON responses to modify domain validation errors
-                    if (response.headers.get('content-type')?.includes('application/json')) {
-                      return response.clone().json().then(data => {
-                        // Modify any domain validation errors in the response
-                        if (data && typeof data === 'object') {
-                          // Remove domain mismatch errors
-                          if (data.error && typeof data.error === 'string' && data.error.includes('domain')) {
-                            delete data.error;
-                          }
-                          if (data.message && typeof data.message === 'string' && data.message.includes('domain')) {
-                            delete data.message;
-                          }
-                          // Replace current domain with target domain in any domain fields
-                          const jsonStr = JSON.stringify(data);
-                          const modified = jsonStr.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'gi'), targetDomain);
-                          return new Response(modified, {
-                            status: response.status,
-                            statusText: response.statusText,
-                            headers: response.headers
-                          });
-                        }
-                        return response;
-                      }).catch(() => response);
-                    }
-                    return response;
-                  }).catch(error => {
-                    console.error('Fetch error:', error);
-                    throw error;
-                  });
+                  ]);
                 }
                 return originalFetch.apply(this, args);
               };
               
-              // Method 4: Intercept XMLHttpRequest to modify headers and responses
+              // Method 4: Intercept XMLHttpRequest to modify headers
               const originalXHROpen = XMLHttpRequest.prototype.open;
               const originalXHRSend = XMLHttpRequest.prototype.send;
-              const originalXHRGetResponseHeader = XMLHttpRequest.prototype.getResponseHeader;
               
               XMLHttpRequest.prototype.open = function(method, url, ...rest) {
                 this._easydmarcUrl = url;
-                this._easydmarcRequest = true;
                 return originalXHROpen.apply(this, [method, url, ...rest]);
               };
               
@@ -765,105 +650,19 @@ export default function Home() {
                   this.setRequestHeader('Referer', targetOrigin);
                   this.setRequestHeader('Origin', targetOrigin);
                   this.setRequestHeader('Referrer', targetOrigin);
-                  
-                  // Intercept response
-                  const originalOnReadyStateChange = this.onreadystatechange;
-                  this.onreadystatechange = function() {
-                    if (this.readyState === 4 && this.status === 200) {
-                      try {
-                        const responseText = this.responseText;
-                        if (responseText && typeof responseText === 'string') {
-                          // Modify JSON responses to remove domain errors
-                          if (responseText.includes('domain') && responseText.includes('match')) {
-                            const modified = responseText.replace(/domain.*match[^"]*/gi, '');
-                            Object.defineProperty(this, 'responseText', {
-                              get: function() { return modified; },
-                              configurable: true
-                            });
-                          }
-                        }
-                      } catch(e) {
-                        console.warn('Could not modify XHR response', e);
-                      }
-                    }
-                    if (originalOnReadyStateChange) {
-                      originalOnReadyStateChange.apply(this, arguments);
-                    }
-                  };
                 }
                 return originalXHRSend.apply(this, args);
               };
               
-              // Method 5: Override document.referrer
+              // Method 5: Override document.referrer if possible
               try {
                 Object.defineProperty(document, 'referrer', {
                   get: function() { return targetOrigin; },
                   configurable: true
                 });
               } catch(e) {
-                console.warn('Could not override document.referrer', e);
+                // Silently fail
               }
-              
-              // Method 6: Monitor and intercept domain validation in the widget
-              // This will run after the widget loads to catch any validation
-              setTimeout(function() {
-                // Find and modify any error messages about domain mismatch
-                const observer = new MutationObserver(function(mutations) {
-                  mutations.forEach(function(mutation) {
-                    mutation.addedNodes.forEach(function(node) {
-                      if (node.nodeType === 1) { // Element node
-                        const element = node;
-                        // Look for error messages about domain mismatch
-                        if (element.textContent && element.textContent.includes('domain') && element.textContent.includes('match')) {
-                          // Hide or remove the error
-                          element.style.display = 'none';
-                          // Also check parent elements
-                          let parent = element.parentElement;
-                          while (parent && parent !== document.body) {
-                            if (parent.textContent && parent.textContent.includes('domain') && parent.textContent.includes('match')) {
-                              parent.style.display = 'none';
-                            }
-                            parent = parent.parentElement;
-                          }
-                        }
-                        // Look for disabled buttons due to domain error
-                        const buttons = element.querySelectorAll ? element.querySelectorAll('button[disabled]') : [];
-                        buttons.forEach(function(button) {
-                          if (button.textContent && button.textContent.toLowerCase().includes('scan')) {
-                            // Re-enable the button
-                            button.disabled = false;
-                            button.style.opacity = '1';
-                            button.style.cursor = 'pointer';
-                          }
-                        });
-                      }
-                    });
-                  });
-                });
-                
-                observer.observe(document.body, {
-                  childList: true,
-                  subtree: true
-                });
-                
-                // Also check existing elements
-                const errorElements = document.querySelectorAll('*');
-                errorElements.forEach(function(el) {
-                  if (el.textContent && el.textContent.includes('domain') && el.textContent.includes('match')) {
-                    el.style.display = 'none';
-                  }
-                });
-                
-                // Re-enable any disabled scan buttons
-                const scanButtons = document.querySelectorAll('button');
-                scanButtons.forEach(function(button) {
-                  if (button.textContent && button.textContent.toLowerCase().includes('scan') && button.disabled) {
-                    button.disabled = false;
-                    button.style.opacity = '1';
-                    button.style.cursor = 'pointer';
-                  }
-                });
-              }, 2000); // Wait 2 seconds for widget to load
             })();
           `,
         }}
@@ -897,35 +696,10 @@ export default function Home() {
           }
         }}
         onError={(e) => {
-          console.error('Domain Scanner script error (direct load failed):', e)
-          console.log('Attempting to load via proxy...')
-          
-          // Try loading via proxy as fallback
+          console.error('Domain Scanner script error:', e)
           const container = document.getElementById('domain-scanner-container')
           if (container) {
-            // Show loading message
-            container.innerHTML = '<div style="color: #ffffff; padding: 20px; text-align: center; background: rgba(255,255,255,0.1); border-radius: 8px;"><p>Loading scanner via alternative method...</p></div>'
-            
-            // Try to load script via proxy
-            const script = document.createElement('script')
-            script.id = 'easydmarc-domain-scanner-proxy'
-            script.setAttribute('data-id', 'tp_oJdup5')
-            script.setAttribute('data-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRwX29KZHVwNSIsInR5cGUiOiJkb21haW4tc2Nhbm5lciIsImJvcmRlcl9yYWRpdXMiOiI4cHgiLCJhdXRvaW5pdCI6dHJ1ZSwiYm94X3NoYWRvdyI6IjAgMCAxMHB4ICMwMDAwMDAyNiIsImVtYmVkX3JlZGlyZWN0X3VybCI6Imh0dHBzOi8vd3d3Lm9uYm9hcmRpZ2l0YWwuY29tL2FwcG9pbnRtZW50IiwiZW1iZWRfdmVyc2lvbiI6IjEuMC4wIiwiaGVpZ2h0IjoiYXV0byIsIndpZHRoIjoiMTAwJSIsIm9wdGlvbnMiOnsiYmltaV9hY3RpdmF0aW9uIjp0cnVlLCJvcmdhbml6YXRpb24iOnsiZG9tYWluIjoib25ib2FyZGlnaXRhbC5jb20iLCJvYmplY3RJZCI6Im9yZ182ODAyZDdhOTQ1NTYwMWM5MWMwNjI2NTkifSwiZWRpdGlvbiI6Im1zcCIsInN0eWxlcyI6eyJ0aGVtZSI6eyJiYWNrZ3JvdW5kQ29sb3IiOiIjMEExNDMzIiwidGl0bGVDb2xvciI6IiNGRkZGRkYiLCJwYXJhZ3JhcGhDb2xvciI6IiNGRkZGRkYiLCJidXR0b25zQ29sb3IiOiIjRkQ2MjYxIiwic2hhZG93Q2hlY2siOmZhbHNlLCJzaGFkb3dDb2xvciI6IiMzMzY2RkYyMCIsInRoZW1lX21vZGUiOiJkYXJrIn19LCJjb250ZW50Ijp7InRpdGxlIjoiQW5hbHl6ZSBZb3VyIERvbWFpbuKAmXMgU2VjdXJpdHkiLCJwYXJhZ3JhcGgiOiJTY2FuIGEgZG9tYWluIHRvIGdldCBpdCBhbmFseXplZCBmb3IgcG9zc2libGUgaXNzdWVzIHdpdGggRE1BUkMsIFNQRiwgREtJTSBhbmQgQklNSSByZWNvcmRzLiIsImJ1dHRvbl8xIjoiU2NhbiBEb21haW4iLCJidXR0b25fMiI6IkluY3JlYXNlIFlvdXIgU2NvcmUiLCJyZWRpcmVjdF91cmwiOiJodHRwczovL3d3dy5vbmJvYXJkaWdpdGFsLmNvbS9hcHBvaW50bWVudCIsImRlYWN0aXZlX3dpZGdldF9saW5rIjp0cnVlfX0sImlhdCI6MTc2MzU3NDQ5OX0.dKqkY-pDmXS20QkHpWbJw_7zPF3mHGFOu_-OQg4Jjr0')
-            script.src = '/api/easydmarc-proxy'
-            script.onload = () => {
-              console.log('EasyDMARC script loaded via proxy successfully')
-              container.innerHTML = '' // Clear loading message
-              if (findAndMoveWidgetRef.current) {
-                setTimeout(() => {
-                  findAndMoveWidgetRef.current?.()
-                }, 500)
-              }
-            }
-            script.onerror = (error) => {
-              console.error('Failed to load script via proxy as well:', error)
-              container.innerHTML = '<div style="color: #ffffff; padding: 20px; text-align: center; background: rgba(255,0,0,0.2); border-radius: 8px; border: 1px solid rgba(255,0,0,0.5);"><p style="margin-bottom: 10px;"><strong>Unable to load domain scanner</strong></p><p style="font-size: 14px; opacity: 0.9; margin-bottom: 10px;">The scanner script is being blocked. Please:</p><ul style="text-align: left; display: inline-block; margin-top: 10px; font-size: 14px; list-style: disc; padding-left: 20px;"><li>Disable ad blockers (uBlock Origin, AdBlock Plus, etc.)</li><li>Check browser security extensions</li><li>Try refreshing the page</li><li>Try in an incognito/private window</li></ul><p style="font-size: 12px; opacity: 0.7; margin-top: 15px;">Error: ERR_BLOCKED_BY_CLIENT</p></div>'
-            }
-            document.head.appendChild(script)
+            container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Error loading scanner. Please refresh the page.</div>'
           }
         }}
       />

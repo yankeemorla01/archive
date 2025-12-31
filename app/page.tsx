@@ -39,6 +39,17 @@ export default function Home() {
       #domain-scanner-container {
         z-index: 50 !important;
         position: relative !important;
+        background: transparent !important;
+        min-height: 350px !important;
+      }
+      
+      /* Ensure container doesn't show black background */
+      #domain-scanner-container:empty::before {
+        content: '';
+        display: block;
+        width: 100%;
+        min-height: 350px;
+        background: transparent;
       }
       
       /* Make widget text visible on dark background */
@@ -95,9 +106,15 @@ export default function Home() {
     const findAndMoveWidget = (): boolean => {
       const container = document.getElementById('domain-scanner-container')
       if (!container) {
-        console.log('Container not found')
+        console.warn('Container not found')
         return false
       }
+      
+      // Log container state
+      console.log('Container state:', {
+        hasChildren: container.children.length > 0,
+        innerHTML: container.innerHTML.substring(0, 100)
+      })
 
       // Skip script tags - we want the actual widget element
       const widgetSelectors = [
@@ -176,6 +193,7 @@ export default function Home() {
       }
 
       // Look for divs that might be the widget (check for common widget patterns)
+      let widgetFoundInDivs = false
       allDivs.forEach((div, index) => {
         // Skip if it's our container or already in it
         if (div.id === 'domain-scanner-container' || div.closest('#domain-scanner-container')) {
@@ -212,10 +230,15 @@ export default function Home() {
           if (div.parentElement !== container) {
             container.appendChild(div)
             console.log('Widget moved to container')
+            widgetFoundInDivs = true
             return true
           }
         }
       })
+      
+      if (widgetFoundInDivs) {
+        return true
+      }
 
       // Check for any iframe that might contain the widget
       const iframes = document.querySelectorAll('iframe')
@@ -474,9 +497,16 @@ export default function Home() {
     // Start checking immediately and more frequently
     let checkInterval: NodeJS.Timeout | null = null
     let captureSetup = false
+    let widgetFound = false
     
     // Check immediately
-    findAndMoveWidget()
+    const initialCheck = findAndMoveWidget()
+    if (initialCheck) {
+      widgetFound = true
+      console.log('Widget found on initial check')
+    } else {
+      console.log('Widget not found on initial check, will keep searching...')
+    }
     
     // Setup capture after widget is found
     const setupCaptureInterval = setInterval(() => {
@@ -492,26 +522,41 @@ export default function Home() {
     // Then check periodically with shorter intervals
     checkInterval = setInterval(() => {
       const found = findAndMoveWidget()
+      if (found && !widgetFound) {
+        widgetFound = true
+        console.log('Widget found during periodic check')
+      }
       if (found && !captureSetup) {
         const result = setupDomainCapture()
         captureSetup = result === true
+        if (captureSetup) {
+          console.log('Domain capture setup completed')
+        }
       }
-      if (found) {
+      if (found && widgetFound && captureSetup) {
         if (checkInterval) {
           clearInterval(checkInterval)
           checkInterval = null
+          console.log('Widget fully loaded and configured, stopping checks')
         }
       }
     }, 200)
 
-    // Stop checking after 6 seconds (reduced from 10)
+    // Stop checking after 10 seconds
     setTimeout(() => {
       if (checkInterval) {
         clearInterval(checkInterval)
         checkInterval = null
+        if (!widgetFound) {
+          console.warn('Widget not found after 10 seconds. Check console for errors.')
+          const container = document.getElementById('domain-scanner-container')
+          if (container && container.children.length === 0) {
+            container.innerHTML = '<div style="color: #ffffff; padding: 20px; text-align: center; background: rgba(255,255,255,0.1); border-radius: 8px;"><p>Widget is loading... If this persists, please refresh the page.</p></div>'
+          }
+        }
       }
       clearInterval(setupCaptureInterval)
-    }, 6000)
+    }, 10000)
 
     return () => {
       if (checkInterval) {
@@ -629,21 +674,33 @@ export default function Home() {
         src="https://easydmarc.com/tools/domain-scanner/embedjs/1.0.0"
         strategy="afterInteractive"
         onLoad={() => {
+          console.log('EasyDMARC script loaded successfully')
           // Check immediately without delay
           const container = document.getElementById('domain-scanner-container')
-          if (container && findAndMoveWidgetRef.current) {
-            findAndMoveWidgetRef.current()
+          if (container) {
+            console.log('Container found, searching for widget...')
+            if (findAndMoveWidgetRef.current) {
+              const found = findAndMoveWidgetRef.current()
+              console.log('Widget search result:', found)
+            }
             
             // Check again after a short delay
             setTimeout(() => {
               if (findAndMoveWidgetRef.current) {
-                findAndMoveWidgetRef.current()
+                const found = findAndMoveWidgetRef.current()
+                console.log('Widget search result (delayed):', found)
               }
             }, 100)
+          } else {
+            console.error('Container not found!')
           }
         }}
         onError={(e) => {
           console.error('Domain Scanner script error:', e)
+          const container = document.getElementById('domain-scanner-container')
+          if (container) {
+            container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Error loading scanner. Please refresh the page.</div>'
+          }
         }}
       />
       {/* Hero Title Section - Above Everything */}
@@ -664,7 +721,12 @@ export default function Home() {
           <div 
             className="w-full min-h-[350px] sm:min-h-[400px]" 
             id="domain-scanner-container"
-            style={{ position: 'relative', zIndex: 50 }}
+            style={{ 
+              position: 'relative', 
+              zIndex: 50,
+              background: 'transparent',
+              minHeight: '350px'
+            }}
           />
         </div>
       </div>

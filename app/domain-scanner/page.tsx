@@ -442,7 +442,9 @@ export default function DomainScannerPage() {
             (function() {
               'use strict';
               const targetDomain = 'onboardigital.com';
+              const targetOrigin = 'https://' + targetDomain;
               
+              // Override hostname and origin
               try {
                 const originalLocation = window.location;
                 Object.defineProperty(originalLocation, 'hostname', {
@@ -450,12 +452,19 @@ export default function DomainScannerPage() {
                   configurable: true,
                   enumerable: true
                 });
+                Object.defineProperty(originalLocation, 'origin', {
+                  get: function() { return targetOrigin; },
+                  configurable: true,
+                  enumerable: true
+                });
               } catch(e) {
                 try {
                   window.__location_hostname = targetDomain;
+                  window.__location_origin = targetOrigin;
                 } catch(e2) {}
               }
               
+              // Override document.domain
               try {
                 Object.defineProperty(document, 'domain', {
                   get: function() { return targetDomain; },
@@ -463,29 +472,53 @@ export default function DomainScannerPage() {
                 });
               } catch(e) {}
               
+              // Override document.referrer
+              try {
+                Object.defineProperty(document, 'referrer', {
+                  get: function() { return targetOrigin; },
+                  configurable: true
+                });
+              } catch(e) {}
+              
+              // Intercept fetch calls
               const originalFetch = window.fetch;
               window.fetch = function(...args) {
                 const url = args[0];
                 if (typeof url === 'string' && url.includes('easydmarc.com')) {
-                  if (args[1] && args[1].headers) {
-                    args[1].headers = new Headers(args[1].headers);
-                    args[1].headers.set('Referer', 'https://' + targetDomain);
-                    args[1].headers.set('Origin', 'https://' + targetDomain);
-                  } else if (args[1]) {
-                    args[1].headers = new Headers({
-                      'Referer': 'https://' + targetDomain,
-                      'Origin': 'https://' + targetDomain
-                    });
-                  } else {
-                    args[1] = {
-                      headers: {
-                        'Referer': 'https://' + targetDomain,
-                        'Origin': 'https://' + targetDomain
-                      }
-                    };
+                  const options = args[1] || {};
+                  const headers = new Headers(options.headers || {});
+                  headers.set('Referer', targetOrigin);
+                  headers.set('Origin', targetOrigin);
+                  headers.set('Referrer', targetOrigin);
+                  
+                  if (options.referrerPolicy) {
+                    options.referrerPolicy = 'origin';
                   }
+                  
+                  return originalFetch.apply(this, [
+                    url,
+                    { ...options, headers: headers, referrer: targetOrigin }
+                  ]);
                 }
                 return originalFetch.apply(this, args);
+              };
+              
+              // Intercept XMLHttpRequest
+              const originalXHROpen = XMLHttpRequest.prototype.open;
+              const originalXHRSend = XMLHttpRequest.prototype.send;
+              
+              XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+                this._easydmarcUrl = url;
+                return originalXHROpen.apply(this, [method, url, ...rest]);
+              };
+              
+              XMLHttpRequest.prototype.send = function(...args) {
+                if (this._easydmarcUrl && typeof this._easydmarcUrl === 'string' && this._easydmarcUrl.includes('easydmarc.com')) {
+                  this.setRequestHeader('Referer', targetOrigin);
+                  this.setRequestHeader('Origin', targetOrigin);
+                  this.setRequestHeader('Referrer', targetOrigin);
+                }
+                return originalXHRSend.apply(this, args);
               };
             })();
           `,

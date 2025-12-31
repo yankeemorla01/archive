@@ -127,19 +127,27 @@ export default function Home() {
           if (widget.tagName === 'IFRAME') {
             const iframe = widget as HTMLIFrameElement
             const src = iframe.src
-            if (src && src.includes('referrer=')) {
-              // Replace scan.onboardigital.com with onboardigital.com in referrer
-              const modifiedSrc = src.replace(
-                /referrer=([^&]*)/,
-                (match, referrerValue) => {
-                  const decoded = decodeURIComponent(referrerValue)
-                  const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
-                  return 'referrer=' + encodeURIComponent(fixed)
+            if (src && src.includes('referrer=') && src.includes('easydmarc.com')) {
+              const currentHost = window.location.hostname
+              const targetDomain = 'onboardigital.com'
+              
+              if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
+                const modifiedSrc = src.replace(
+                  /referrer=([^&]*)/,
+                  (match, referrerValue) => {
+                    try {
+                      const decoded = decodeURIComponent(referrerValue)
+                      const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain)
+                      return 'referrer=' + encodeURIComponent(fixed)
+                    } catch (e) {
+                      return 'referrer=' + encodeURIComponent('https://' + targetDomain)
+                    }
+                  }
+                )
+                if (modifiedSrc !== src) {
+                  iframe.src = modifiedSrc
+                  console.log('Modified iframe referrer:', currentHost, '->', targetDomain)
                 }
-              )
-              if (modifiedSrc !== src) {
-                iframe.src = modifiedSrc
-                console.log('Modified iframe referrer')
               }
             }
           }
@@ -217,18 +225,27 @@ export default function Home() {
           
           // Modify referrer in iframe URL
           const src = iframe.src
-          if (src && src.includes('referrer=')) {
-            const modifiedSrc = src.replace(
-              /referrer=([^&]*)/,
-              (match, referrerValue) => {
-                const decoded = decodeURIComponent(referrerValue)
-                const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
-                return 'referrer=' + encodeURIComponent(fixed)
+          if (src && src.includes('referrer=') && src.includes('easydmarc.com')) {
+            const currentHost = window.location.hostname
+            const targetDomain = 'onboardigital.com'
+            
+            if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
+              const modifiedSrc = src.replace(
+                /referrer=([^&]*)/,
+                (match, referrerValue) => {
+                  try {
+                    const decoded = decodeURIComponent(referrerValue)
+                    const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain)
+                    return 'referrer=' + encodeURIComponent(fixed)
+                  } catch (e) {
+                    return 'referrer=' + encodeURIComponent('https://' + targetDomain)
+                  }
+                }
+              )
+              if (modifiedSrc !== src) {
+                iframe.src = modifiedSrc
+                console.log('Modified iframe referrer in iframe search:', currentHost, '->', targetDomain)
               }
-            )
-            if (modifiedSrc !== src) {
-              iframe.src = modifiedSrc
-              console.log('Modified iframe referrer in iframe search')
             }
           }
           
@@ -397,21 +414,33 @@ export default function Home() {
       return inputFound || buttonFound
     }
 
-    // Function to fix iframe referrer
+    // Function to fix iframe referrer - replace any domain with onboardigital.com
     const fixIframeReferrer = (iframe: HTMLIFrameElement) => {
       const src = iframe.src
-      if (src && src.includes('referrer=') && src.includes('scan.onboardigital.com')) {
-        const modifiedSrc = src.replace(
-          /referrer=([^&]*)/,
-          (match, referrerValue) => {
-            const decoded = decodeURIComponent(referrerValue)
-            const fixed = decoded.replace('scan.onboardigital.com', 'onboardigital.com')
-            return 'referrer=' + encodeURIComponent(fixed)
+      if (src && src.includes('referrer=') && src.includes('easydmarc.com')) {
+        const currentHost = window.location.hostname
+        const targetDomain = 'onboardigital.com'
+        
+        // Only fix if current domain is not the target domain
+        if (currentHost !== targetDomain && !currentHost.endsWith('.' + targetDomain)) {
+          const modifiedSrc = src.replace(
+            /referrer=([^&]*)/,
+            (match, referrerValue) => {
+              try {
+                const decoded = decodeURIComponent(referrerValue)
+                // Replace any occurrence of current host with target domain
+                const fixed = decoded.replace(new RegExp(currentHost.replace(/\./g, '\\.'), 'g'), targetDomain)
+                return 'referrer=' + encodeURIComponent(fixed)
+              } catch (e) {
+                // If decoding fails, just replace the hostname in the URL
+                return 'referrer=' + encodeURIComponent('https://' + targetDomain)
+              }
+            }
+          )
+          if (modifiedSrc !== src) {
+            iframe.src = modifiedSrc
+            console.log('Fixed iframe referrer via observer:', currentHost, '->', targetDomain)
           }
-        )
-        if (modifiedSrc !== src) {
-          iframe.src = modifiedSrc
-          console.log('Fixed iframe referrer via observer')
         }
       }
     }
@@ -506,11 +535,12 @@ export default function Home() {
             (function() {
               'use strict';
               // Override domain validation for EasyDMARC widget
-              // This allows the widget to work on scan.onboardigital.com
+              // This allows the widget to work on any subdomain by redirecting to onboardigital.com
               
               const targetDomain = 'onboardigital.com';
+              const targetOrigin = 'https://' + targetDomain;
               
-              // Method 1: Override hostname directly if possible (silent)
+              // Method 1: Override hostname directly if possible
               try {
                 const originalLocation = window.location;
                 Object.defineProperty(originalLocation, 'hostname', {
@@ -518,11 +548,16 @@ export default function Home() {
                   configurable: true,
                   enumerable: true
                 });
+                Object.defineProperty(originalLocation, 'origin', {
+                  get: function() { return targetOrigin; },
+                  configurable: true,
+                  enumerable: true
+                });
               } catch(e) {
                 // Silently fail - browser may protect this property
               }
               
-              // Method 2: Override document.domain (silent)
+              // Method 2: Override document.domain
               try {
                 Object.defineProperty(document, 'domain', {
                   get: function() { return targetDomain; },
@@ -532,33 +567,57 @@ export default function Home() {
                 // Silently fail
               }
               
-              // Method 3: Intercept fetch/XHR calls to modify headers
+              // Method 3: Intercept fetch calls to modify headers and referrer
               const originalFetch = window.fetch;
               window.fetch = function(...args) {
                 const url = args[0];
                 if (typeof url === 'string' && url.includes('easydmarc.com')) {
-                  // Modify headers to include correct domain
                   const options = args[1] || {};
                   const headers = new Headers(options.headers || {});
-                  headers.set('Referer', 'https://' + targetDomain);
-                  headers.set('Origin', 'https://' + targetDomain);
+                  headers.set('Referer', targetOrigin);
+                  headers.set('Origin', targetOrigin);
+                  headers.set('Referrer', targetOrigin);
+                  
+                  // Also modify referrerPolicy if present
+                  if (options.referrerPolicy) {
+                    options.referrerPolicy = 'origin';
+                  }
                   
                   return originalFetch.apply(this, [
                     url,
-                    { ...options, headers: headers }
+                    { ...options, headers: headers, referrer: targetOrigin }
                   ]);
                 }
                 return originalFetch.apply(this, args);
               };
               
-              // Method 4: Intercept XMLHttpRequest if used
+              // Method 4: Intercept XMLHttpRequest to modify headers
               const originalXHROpen = XMLHttpRequest.prototype.open;
+              const originalXHRSend = XMLHttpRequest.prototype.send;
+              
               XMLHttpRequest.prototype.open = function(method, url, ...rest) {
-                if (typeof url === 'string' && url.includes('easydmarc.com')) {
-                  // Modify URL or headers if needed
-                }
+                this._easydmarcUrl = url;
                 return originalXHROpen.apply(this, [method, url, ...rest]);
               };
+              
+              XMLHttpRequest.prototype.send = function(...args) {
+                if (this._easydmarcUrl && typeof this._easydmarcUrl === 'string' && this._easydmarcUrl.includes('easydmarc.com')) {
+                  this.setRequestHeader('Referer', targetOrigin);
+                  this.setRequestHeader('Origin', targetOrigin);
+                  this.setRequestHeader('Referrer', targetOrigin);
+                }
+                return originalXHRSend.apply(this, args);
+              };
+              
+              // Method 5: Override document.referrer if possible
+              try {
+                Object.defineProperty(document, 'referrer', {
+                  get: function() { return targetOrigin; },
+                  configurable: true
+                });
+              } catch(e) {
+                // Silently fail
+              }
             })();
           `,
         }}

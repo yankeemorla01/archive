@@ -112,7 +112,41 @@ export const Header = () => {
 
           </nav>
 
-          <div style={{ flex: "0 0 auto", marginLeft: "auto" }}>
+          <div style={{ flex: "0 0 auto", marginLeft: "auto", display: "flex", gap: "12px" }}>
+
+            <a
+
+              className="text-white cursor-pointer"
+
+              style={{
+
+                width: "112px",
+
+                height: "49px",
+
+                borderRadius: "6px",
+
+                fontSize: "17px",
+
+                background: "transparent",
+
+                fontWeight: 500,
+
+                display: "flex",
+
+                alignItems: "center",
+
+                justifyContent: "center",
+
+              }}
+
+              href="https://portal.onboardigital.com"
+
+            >
+
+              Login
+
+            </a>
 
             <a
 
@@ -180,9 +214,29 @@ export const Header = () => {
 
 
 
-          {/* Botón centrado abajo */}
+          {/* Botones centrados abajo */}
 
-          <div className="flex justify-center w-full mt-6">
+          <div className="flex justify-center w-full mt-6 gap-3">
+
+            <a
+
+              href="https://portal.onboardigital.com"
+
+              className="text-white px-5 py-2 rounded hover:bg-white hover:text-black transition-all duration-300"
+
+              style={{
+
+                fontSize: "17px",
+
+                fontWeight: 500,
+
+              }}
+
+            >
+
+              Login
+
+            </a>
 
             <a
 

@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
@@ -12,19 +12,23 @@ interface MobileMenuProps {
 
 export const MobileMenu = ({ className }: MobileMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cybersecurityOpen, setCybersecurityOpen] = useState(false);
   const pathname = usePathname();
 
   const menuItems = [
     { name: "Home", href: "https://www.onboardigital.com/", highlight: false },
     { name: "Vendors", href: "https://www.onboardigital.com/vendors", highlight: false },
     { name: "Services", href: "https://www.onboardigital.com/services", highlight: false },
-    { name: "Cybersecurity", href: "https://www.onboardigital.com/cybersecurity", highlight: true },
-    { name: "Appointment", href: "https://www.onboardigital.com/appointment", highlight: false },
-    { name: "Contact", href: "https://www.onboardigital.com/contact", highlight: false },
+  ];
+
+  const cybersecuritySubItems = [
+    { name: "Human Risk Management", href: "https://www.onboardigital.com/humanriskmanagment" },
+    { name: "DMARC Made Simple", href: "/domain-scanner" },
   ];
 
   const handleLinkClick = () => {
     setIsOpen(false);
+    setCybersecurityOpen(false);
   };
 
   return (
@@ -83,16 +87,58 @@ export const MobileMenu = ({ className }: MobileMenuProps) => {
                 key={item.name}
                 href={item.href}
                 onClick={handleLinkClick}
-                className={cn(
-                  "text-xl font-mono uppercase transition-colors ease-out duration-150 py-2",
-                  item.highlight 
-                    ? "text-[#FD6262]" 
-                    : "text-white hover:text-[#FD6262]"
-                )}
+                className="text-xl font-mono uppercase transition-colors ease-out duration-150 py-2 text-white hover:text-[#FD6262]"
               >
                 {item.name}
               </a>
             ))}
+
+            {/* Cybersecurity con submenu */}
+            <div>
+              <button
+                onClick={() => setCybersecurityOpen(!cybersecurityOpen)}
+                className="text-xl font-mono uppercase transition-colors ease-out duration-150 py-2 text-[#FD6262] hover:text-[#FD6262] flex items-center gap-2 w-full"
+              >
+                Cybersecurity
+                <ChevronDown
+                  size={20}
+                  className={cn(
+                    "transition-transform duration-200",
+                    cybersecurityOpen && "rotate-180"
+                  )}
+                />
+              </button>
+              {cybersecurityOpen && (
+                <div className="ml-4 mt-2 space-y-4">
+                  {cybersecuritySubItems.map((subItem) => (
+                    <a
+                      key={subItem.name}
+                      href={subItem.href}
+                      onClick={handleLinkClick}
+                      className="text-lg font-mono uppercase transition-colors ease-out duration-150 py-2 text-white hover:text-[#FD6262] block"
+                    >
+                      {subItem.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <a
+              href="https://www.onboardigital.com/appointment"
+              onClick={handleLinkClick}
+              className="text-xl font-mono uppercase transition-colors ease-out duration-150 py-2 text-white hover:text-[#FD6262]"
+            >
+              Appointment
+            </a>
+
+            <a
+              href="https://www.onboardigital.com/contact"
+              onClick={handleLinkClick}
+              className="text-xl font-mono uppercase transition-colors ease-out duration-150 py-2 text-white hover:text-[#FD6262]"
+            >
+              Contact
+            </a>
 
             <div className="mt-6">
               <a
